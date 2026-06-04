@@ -11,8 +11,8 @@ if (canvas && shell) {
 
   const CELL = 1.16;
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0f0c1b);
-  scene.fog = new THREE.Fog(0x0f0c1b, 14, 31);
+  scene.background = new THREE.Color(0x6d97c4);
+  scene.fog = new THREE.Fog(0x8fb4d8, 24, 52);
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -24,7 +24,7 @@ if (canvas && shell) {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.28;
 
   const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
   camera.position.set(11.6, 13.4, 12.6);
@@ -46,10 +46,10 @@ if (canvas && shell) {
   scene.add(terrainRoot, routeRoot, effectRoot);
 
   /* ── Pirate Lighting ── */
-  const ambient = new THREE.HemisphereLight(0xff7b54, 0x15163a, 1.2);
+  const ambient = new THREE.HemisphereLight(0xffe2b8, 0x5a6f8c, 1.45);
   scene.add(ambient);
 
-  const sun = new THREE.DirectionalLight(0xffaa5a, 4.2);
+  const sun = new THREE.DirectionalLight(0xffd08a, 4.4);
   sun.position.set(4.5, 12, 7);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -406,7 +406,7 @@ if (canvas && shell) {
       model.position.x -= center.x;
       model.position.z -= center.z;
       model.position.y -= bounds.min.y;
-      model.scale.setScalar(0.95 / Math.max(size.x, size.z, 0.001));
+      model.scale.setScalar(0.72 / Math.max(size.x, size.z, 0.001));
 
       const loadedLight = new THREE.PointLight(0x25d9ff, 1.8, 4.5);
       loadedLight.position.set(0, 0.9, 0.2);
@@ -697,12 +697,12 @@ if (canvas && shell) {
         const rockMat = category === "rocks" ? (i % 3 === 0 ? materials.rockDark : materials.rock) : (i % 2 === 0 ? materials.sand : materials.wood);
         const rock = new THREE.Mesh(rockGeo, rockMat);
         rock.position.set(
-          (seeded(r, c, i * 5 + 1) - 0.5) * 0.6,
+          (seeded(r, c, i * 5 + 1) - 0.5) * 0.42,
           0.15 + s * 0.2,
-          (seeded(r, c, i * 5 + 2) - 0.5) * 0.6
+          (seeded(r, c, i * 5 + 2) - 0.5) * 0.42
         );
         rock.rotation.set(s * 2, s * 3, s * 1.5);
-        rock.scale.setScalar(0.5 + s * 0.7);
+        rock.scale.setScalar(0.42 + s * 0.45);
         rock.castShadow = true;
         rock.receiveShadow = true;
         procBarrier.add(rock);
@@ -749,22 +749,22 @@ if (canvas && shell) {
     if (category === "rocks") {
       const rockModels = ["rocks-a.glb", "rocks-b.glb", "rocks-c.glb"];
       modelName = rockModels[Math.floor(seed * rockModels.length)];
-      scale = 0.55;
+      scale = 0.5;
       yOffset = 0.05;
     } else if (category === "sandRocks") {
       const sandRockModels = ["rocks-sand-a.glb", "rocks-sand-b.glb", "rocks-sand-c.glb"];
       modelName = sandRockModels[Math.floor(seed * sandRockModels.length)];
-      scale = 0.55;
+      scale = 0.5;
       yOffset = 0.05;
     } else if (category === "cargo") {
       const cargoModels = ["crate-bottles.glb", "crate.glb", "barrel.glb"];
       modelName = cargoModels[Math.floor(seed * cargoModels.length)];
-      scale = 0.65;
+      scale = 0.58;
       yOffset = 0.0;
     } else if (category === "ruins") {
       const ruinModels = ["castle-wall.glb", "structure-fence.glb", "structure-fence-sides.glb"];
       modelName = ruinModels[Math.floor(seed * ruinModels.length)];
-      scale = 0.5;
+      scale = 0.46;
       yOffset = 0.05;
     }
 
