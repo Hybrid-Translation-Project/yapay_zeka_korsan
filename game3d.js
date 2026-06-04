@@ -1,7 +1,5 @@
 import * as THREE from "./vendor/three.module.js";
 import { GLTFLoader } from "./vendor/GLTFLoader.js";
-import { MTLLoader } from "./vendor/MTLLoader.js";
-import { OBJLoader } from "./vendor/OBJLoader.js";
 
 const canvas = document.getElementById("scene3d");
 const shell = document.getElementById("sceneShell");
@@ -164,23 +162,6 @@ if (canvas && shell) {
 
   /* ── GLB Model Cache ── */
   const textureLoader = new THREE.TextureLoader();
-  const ROBOT_MODEL_BASE = "assets/models/robot/67-robot-1/";
-  const robotColorMap = textureLoader.load(`${ROBOT_MODEL_BASE}DefaultMaterial_Base_Color.png`);
-  const robotNormalMap = textureLoader.load(`${ROBOT_MODEL_BASE}DefaultMaterial_Normal_OpenGL.png`);
-  const robotRoughnessMap = textureLoader.load(`${ROBOT_MODEL_BASE}DefaultMaterial_Roughness.png`);
-  const robotMetalnessMap = textureLoader.load(`${ROBOT_MODEL_BASE}DefaultMaterial_Metallic.png`);
-  robotColorMap.colorSpace = THREE.SRGBColorSpace;
-
-  const robotObjMaterial = new THREE.MeshStandardMaterial({
-    map: robotColorMap,
-    normalMap: robotNormalMap,
-    roughnessMap: robotRoughnessMap,
-    metalnessMap: robotMetalnessMap,
-    roughness: 0.48,
-    metalness: 0.28,
-    emissive: 0x062936,
-    emissiveIntensity: 0.16
-  });
 
   const glbLoader = new GLTFLoader();
   const modelCache = new Map();
@@ -198,36 +179,6 @@ if (canvas && shell) {
         },
         undefined,
         () => resolve(null)
-      );
-    });
-  }
-
-  const mtlLoader = new MTLLoader();
-  const objLoader = new OBJLoader();
-
-  function loadOBJ(path, mtlPath) {
-    return new Promise((resolve) => {
-      mtlLoader.load(
-        mtlPath,
-        (materialsInfo) => {
-          materialsInfo.preload();
-          objLoader.setMaterials(materialsInfo);
-          objLoader.load(
-            path,
-            (obj) => resolve(obj.clone()),
-            undefined,
-            () => resolve(null)
-          );
-        },
-        undefined,
-        () => {
-          objLoader.load(
-            path,
-            (obj) => resolve(obj.clone()),
-            undefined,
-            () => resolve(null)
-          );
-        }
       );
     });
   }
@@ -293,6 +244,31 @@ if (canvas && shell) {
     );
   }
 
+  function fitModelInsideCell(model, maxFootprint, yOffset = 0, maxScale = 1) {
+    const bounds = new THREE.Box3();
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+
+    model.position.set(0, 0, 0);
+    model.scale.setScalar(1);
+    model.updateWorldMatrix(true, true);
+
+    bounds.setFromObject(model);
+    if (bounds.isEmpty()) return;
+
+    bounds.getSize(size);
+    bounds.getCenter(center);
+
+    const footprint = Math.max(size.x, size.z, 0.001);
+    const scale = Math.min(maxScale, maxFootprint / footprint);
+    model.scale.setScalar(scale);
+    model.position.set(
+      -center.x * scale,
+      -bounds.min.y * scale + yOffset,
+      -center.z * scale
+    );
+  }
+
   function tileMaterial(tile, r, c) {
     if (tile === "#") return materials.wallTile;
     if (tile === "R") return materials.riskTile;
@@ -301,79 +277,37 @@ if (canvas && shell) {
     return materials.seaTile;
   }
 
-  /* ── Agent (Robot Pirate) ── */
+  /* ── Agent (Pirate Ship Fallback) ── */
   function createAgent() {
     const group = new THREE.Group();
 
-    const ring = new THREE.Mesh(geometries.glowRing, materials.agentAccent);
-    ring.rotation.x = Math.PI / 2;
-    ring.position.y = 0.11;
-    group.add(ring);
-    group.userData.ring = ring;
-
-    const wheels = [];
-    [-0.36, 0.36].forEach((x) => {
-      [-0.19, 0.19].forEach((z) => {
-        const wheel = new THREE.Mesh(geometries.agentWheel, materials.tire);
-        wheel.position.set(x, 0.28, z);
-        wheel.rotation.z = Math.PI / 2;
-        wheel.castShadow = true;
-        wheels.push(wheel);
-        group.add(wheel);
-      });
-    });
-    group.userData.wheels = wheels;
-
     const bodyGroup = new THREE.Group();
 
-    const body = new THREE.Mesh(geometries.agentBody, materials.agent);
-    body.position.y = 0.45;
-    body.castShadow = true;
-    body.receiveShadow = true;
+    // Procedural wooden boat fallback
+    const hull = new THREE.Mesh(geometries.shipHull, materials.wood);
+    hull.position.y = 0.25;
+    hull.castShadow = true;
+    hull.receiveShadow = true;
 
-    const panel = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.08, 0.08), materials.agentAccent);
-    panel.position.set(0, 0.49, 0.26);
+    const mast = new THREE.Mesh(geometries.shipMast, materials.woodDark);
+    mast.position.set(0, 0.7, 0);
+    mast.castShadow = true;
 
-    const head = new THREE.Mesh(geometries.agentHead, materials.agentPanel);
-    head.position.y = 0.83;
-    head.castShadow = true;
+    const sail = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.45), new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide }));
+    sail.position.set(0, 0.75, 0.05);
+    sail.castShadow = true;
 
-    const face = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.18, 0.025), materials.agent);
-    face.position.set(0, 0.84, 0.195);
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.12), materials.flagRed);
+    flag.position.set(0.1, 1.0, 0);
+    flag.rotation.y = Math.PI / 2;
 
-    const leftEye = new THREE.Mesh(geometries.agentEye, materials.agentAccent);
-    leftEye.position.set(-0.105, 0.86, 0.215);
+    const light = new THREE.PointLight(0x25d9ff, 1.8, 4.5);
+    light.position.set(0, 0.9, 0.2);
 
-    const rightEye = new THREE.Mesh(geometries.agentEye, materials.agentAccent);
-    rightEye.position.set(0.105, 0.86, 0.215);
-
-    const hatBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.04, 12), materials.agent);
-    hatBrim.position.y = 1.01;
-    hatBrim.castShadow = true;
-
-    const hatTop = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.18, 0.28), materials.agent);
-    hatTop.position.y = 1.12;
-    hatTop.castShadow = true;
-
-    const skull = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-    skull.position.set(0, 1.12, 0.15);
-
-    const antenna = new THREE.Mesh(geometries.antenna, materials.agentAccent);
-    antenna.position.y = 1.34;
-    antenna.castShadow = true;
-
-    const locatorBeam = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.72, 12), materials.agentAccent);
-    locatorBeam.position.y = 1.68;
-
-    const locatorCap = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 10), materials.agentAccent);
-    locatorCap.position.y = 2.08;
-
-    const light = new THREE.PointLight(0x25d9ff, 3.4, 5.8);
-    light.position.set(0, 1.1, 0.4);
-
-    bodyGroup.add(body, panel, head, face, leftEye, rightEye, hatBrim, hatTop, skull, antenna, locatorBeam, locatorCap, light);
+    bodyGroup.add(hull, mast, sail, flag, light);
     group.add(bodyGroup);
     group.scale.setScalar(1.55);
+    group.userData.wheels = []; // Empty array to prevent iteration errors
 
     /* Muzzle flash (top tetiklenince gosterilir) - pruvada, gidis (dusman) yonune bakar */
     const muzzle = new THREE.Mesh(geometries.flame, materials.fireCore);
@@ -387,7 +321,7 @@ if (canvas && shell) {
     /* Robot yerine korsan gemisi modeli yukle */
     loadGLB("ship-pirate-medium.glb").then((model) => {
       if (!model) {
-        canvas.dataset.robotModel = "fallback-robot";
+        canvas.dataset.robotModel = "fallback-ship";
         return;
       }
       const bounds = new THREE.Box3().setFromObject(model);
@@ -412,9 +346,11 @@ if (canvas && shell) {
       loadedLight.position.set(0, 0.9, 0.2);
 
       group.remove(bodyGroup);
-      group.userData.wheels.forEach((wheel) => {
-        wheel.visible = false;
-      });
+      if (group.userData.wheels) {
+        group.userData.wheels.forEach((wheel) => {
+          wheel.visible = false;
+        });
+      }
       if (group.userData.ring) group.userData.ring.visible = false;
       group.userData.shipModel = model;
       canvas.dataset.robotModel = "ship-pirate-medium-glb";
@@ -690,19 +626,19 @@ if (canvas && shell) {
 
     // Build procedural fallback based on category
     if (category === "rocks" || category === "sandRocks") {
-      const rockCount = 3 + Math.floor(seed * 3);
+      const rockCount = 2 + Math.floor(seed * 3);
       for (let i = 0; i < rockCount; i++) {
         const s = seeded(r, c, i * 7 + 3);
         const rockGeo = i % 2 === 0 ? geometries.barrierRock : geometries.rock;
         const rockMat = category === "rocks" ? (i % 3 === 0 ? materials.rockDark : materials.rock) : (i % 2 === 0 ? materials.sand : materials.wood);
         const rock = new THREE.Mesh(rockGeo, rockMat);
         rock.position.set(
-          (seeded(r, c, i * 5 + 1) - 0.5) * 0.44,
-          0.25 + s * 0.38,
-          (seeded(r, c, i * 5 + 2) - 0.5) * 0.44
+          (seeded(r, c, i * 5 + 1) - 0.5) * 0.5,
+          0.26 + s * 0.42,
+          (seeded(r, c, i * 5 + 2) - 0.5) * 0.5
         );
         rock.rotation.set(s * 2, s * 3, s * 1.5);
-        rock.scale.setScalar(0.55 + s * 0.55);
+        rock.scale.setScalar(0.76 + s * 0.6);
         rock.castShadow = true;
         rock.receiveShadow = true;
         procBarrier.add(rock);
@@ -743,37 +679,41 @@ if (canvas && shell) {
 
     // Select the GLB model based on category
     let modelName = "rocks-a.glb";
-    let scale = 0.55;
-    let yOffset = 0.05;
+    let maxModelScale = 0.5;
+    let modelFootprint = CELL * 0.72;
+    let yOffset = 0.04;
 
     if (category === "rocks") {
       const rockModels = ["rocks-a.glb", "rocks-b.glb", "rocks-c.glb"];
       modelName = rockModels[Math.floor(seed * rockModels.length)];
-      scale = 0.68;
-      yOffset = 0.08;
+      maxModelScale = 0.82;
+      modelFootprint = CELL * 1.18;
+      yOffset = 0.04;
     } else if (category === "sandRocks") {
       const sandRockModels = ["rocks-sand-a.glb", "rocks-sand-b.glb", "rocks-sand-c.glb"];
       modelName = sandRockModels[Math.floor(seed * sandRockModels.length)];
-      scale = 0.68;
-      yOffset = 0.08;
+      maxModelScale = 0.82;
+      modelFootprint = CELL * 1.18;
+      yOffset = 0.04;
     } else if (category === "cargo") {
       const cargoModels = ["crate-bottles.glb", "crate.glb", "barrel.glb"];
       modelName = cargoModels[Math.floor(seed * cargoModels.length)];
-      scale = 0.65;
-      yOffset = 0.04;
+      maxModelScale = 0.52;
+      modelFootprint = CELL * 0.7;
+      yOffset = 0.03;
     } else if (category === "ruins") {
       const ruinModels = ["castle-wall.glb", "structure-fence.glb", "structure-fence-sides.glb"];
       modelName = ruinModels[Math.floor(seed * ruinModels.length)];
-      scale = 0.56;
-      yOffset = 0.08;
+      maxModelScale = 0.48;
+      modelFootprint = CELL * 0.76;
+      yOffset = 0.05;
     }
 
     loadGLB(modelName).then((model) => {
       if (model) {
         group.remove(procBarrier);
-        model.scale.setScalar(scale);
-        model.position.set(0, yOffset, 0);
         model.rotation.y = seed * Math.PI * 2;
+        fitModelInsideCell(model, modelFootprint, yOffset, maxModelScale);
         model.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
@@ -944,6 +884,7 @@ if (canvas && shell) {
       ball.castShadow = true;
       procCannon.add(ball);
     }
+    procCannon.scale.setScalar(1.32);
     group.add(procCannon);
 
     const half = CELL * 0.43;
@@ -967,7 +908,7 @@ if (canvas && shell) {
     loadGLB("cannon.glb").then((model) => {
       if (model) {
         group.remove(procCannon);
-        model.scale.setScalar(0.48);
+        model.scale.setScalar(0.68);
         model.position.set(0, 0.08, 0);
         model.rotation.y = Math.PI;
         model.traverse((child) => {
@@ -1231,7 +1172,7 @@ if (canvas && shell) {
             pos.y = -0.02;
 
             boat.position.copy(pos);
-            boat.scale.setScalar(0.45);
+            boat.scale.setScalar(0.7);
             boat.rotation.y = Math.atan2(-pos.x, -pos.z) + Math.PI / 2;
             boat.rotation.x = Math.sin(r + c) * 0.05;
 
@@ -1390,10 +1331,9 @@ if (canvas && shell) {
     if (gridKey !== lastGridKey) {
       buildTerrain(detail.grid);
       lastGridKey = gridKey;
-      lastRouteKey = "";
-    }
-
-    if (routeKey !== lastRouteKey) {
+      buildRoute(detail.result);
+      lastRouteKey = routeKey;
+    } else if (routeKey !== lastRouteKey) {
       buildRoute(detail.result);
       lastRouteKey = routeKey;
     }

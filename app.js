@@ -80,6 +80,7 @@
   ];
 
   const MAX_PACKAGES = 8;
+  const VIEW_STORAGE_KEY = "korsanHazineActiveView";
 
   function cloneRows(rows) {
     return rows.map((row) => row.split(""));
@@ -299,27 +300,82 @@
       grid: cloneRows(MAP_PRESETS[0].rows),
       result: null,
       pathIndex: 0,
-      timer: null
+      timer: null,
+      activeView: "intro"
     };
 
-    function openGame(options = {}) {
+    function rememberView(view) {
+      try {
+        if (root.sessionStorage) {
+          root.sessionStorage.setItem(VIEW_STORAGE_KEY, view);
+        }
+      } catch (error) {
+        // Storage can be blocked in some browser modes; the UI still works without it.
+      }
+    }
+
+    function rememberedView() {
+      try {
+        return root.sessionStorage ? root.sessionStorage.getItem(VIEW_STORAGE_KEY) : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function showGameView() {
       if (elements.introScreen) elements.introScreen.hidden = true;
       if (elements.gameView) elements.gameView.hidden = false;
+      state.activeView = "game";
+      rememberView("game");
+    }
+
+    function keepGameViewVisible() {
+      if (elements.introScreen) elements.introScreen.hidden = true;
+      if (elements.gameView) elements.gameView.hidden = false;
+    }
+
+    function showIntroView() {
+      if (elements.gameView) elements.gameView.hidden = true;
+      if (elements.introScreen) elements.introScreen.hidden = false;
+      state.activeView = "intro";
+      rememberView("intro");
+    }
+
+    function scrollToElement(element) {
+      if (!element || !element.scrollIntoView) return;
       root.requestAnimationFrame(() => {
-        elements.gameView.scrollIntoView({ behavior: "smooth", block: "start" });
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
       });
+    }
+
+    function openGame(options = {}) {
+      showGameView();
+      if (options.scroll !== false) {
+        scrollToElement(elements.gameView);
+      }
       if (options.solveImmediately) {
         root.setTimeout(solve, 120);
       }
     }
 
-    function openStory() {
+    function isMissionInProgress() {
+      return Boolean(
+        state.timer ||
+        (
+          state.result &&
+          state.result.success &&
+          state.pathIndex > 0 &&
+          state.pathIndex < state.result.path.length - 1
+        )
+      );
+    }
+
+    function openStory(event) {
+      if (event) event.preventDefault();
+      if (isMissionInProgress()) return;
       stopTimer();
-      if (elements.gameView) elements.gameView.hidden = true;
-      if (elements.introScreen) elements.introScreen.hidden = false;
-      root.requestAnimationFrame(() => {
-        elements.introScreen.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+      showIntroView();
+      scrollToElement(elements.introScreen);
     }
 
     function selectedBrush() {
@@ -475,6 +531,9 @@
     }
 
     function render() {
+      if (state.activeView === "game") {
+        keepGameViewVisible();
+      }
       elements.mapTitle.textContent = state.preset.title;
       elements.mapSubtitle.textContent = state.preset.subtitle;
       paintGrid();
@@ -593,6 +652,8 @@
 
     if (searchParams && searchParams.get("quick") === "1") {
       openGame({ solveImmediately: true });
+    } else if (rememberedView() === "game") {
+      openGame({ scroll: false });
     }
   }
 

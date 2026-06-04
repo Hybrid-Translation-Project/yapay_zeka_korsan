@@ -35,10 +35,6 @@ http://127.0.0.1:8765/index.html
 - Normal yol/kumsal: `.`, maliyet 1
 - Arama algoritmasi: A*
 
-## Robot Notu
-
-`Animated Robot - Oct 2018` klasorundeki FBX/OBJ robot dosyalari projede duruyor, ancak su an aktif 3D sahnede o FBX robot kullanilmiyor. FBX yuklenince robot sahneden kayboldugu icin aktif ajan, Three.js ile olusturulan garanti gorunen 3D robot modelidir.
-
 ## Test
 
 Node.js varsa:

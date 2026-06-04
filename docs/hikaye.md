@@ -1,11 +1,11 @@
-# Akilli Kurtarma Ajani Hikaye Metni
+# Korsan Hazine Avcisi Hikaye Metni
 
-Kuzey Mahallesi'nde gece yarisi buyuk bir sarsinti olur. Haberlesme hatlari zayiflar, yollarin bir kismi kapanir ve bazi sokaklar enkazla doldugu icin gecis maliyeti artar. Hastanedeki ekipler, mahalleye dagilmis yardim paketlerini beklemektedir.
+Kafatasi Adasi'nda efsanevi bir korsan hazinesi gizlidir. Karayip Denizi'nin en tehlikeli sularinda seyahat eden cesur korsan gemimiz; adanin etrafindaki kayaliklardan, dusman gemilerinden, tehlikeli top mevzilerinden ve batik gemi enkazlarindan kacinmalidir.
 
-Kurtarma ajani, afet bolgesinin 12x12 grid haritasini alir. Haritada baslangic noktasi, hastane, kapali yollar, riskli bolgeler, enkazli alanlar ve yardim paketleri vardir. Ajanin gorevi sadece hastaneye ulasmak degildir; once tum yardim paketlerini toplamalidir.
+Korsan gemimiz, Kafatasi Adasi'nin 12x12 grid taktik haritasini alir. Haritada baslangic demir yeri, hedef korsan kalesi, gecilemeyen kayaliklar, tehlikeli top mevzileri, batik gemiler, dusman savas gemileri ve kayip hazine sandiklari yer alir. Geminin gorevi dogrudan kaleye ulasmak degildir; once adadaki tum hazine sandiklarini toplamali, ardindan korsan kalesine guvenli bir sekilde ulasmali.
 
-Ajan her hamlede yukari, asagi, sol veya sag yonde ilerleyebilir. Kapali yollardan gecemez. Riskli bolgeler ve enkazli alanlar daha yuksek maliyetlidir. Bu nedenle en kisa rota her zaman en iyi rota olmayabilir.
+Korsan gemisi her adimda yukari, asagi, sol veya sag yonde ilerleyebilir. Gecilemeyen kayalardan gecemez. Top mevzileri ve batik enkaz bolgeleri daha yuksek maliyetlidir. Dusman gemilerine girildiginde ise catisma yasanir ve dusman batirilir. En kisa rota her zaman en guvenli ve en dusuk maliyetli rota olmayabilir.
 
-A* algoritmasi, ajanin karar verme mekanizmasidir. Ajan, gercek maliyet ile hedefe kalan tahmini uzakligi birlikte hesaplar. Boylece hem paketleri toplar hem de hastaneye en dusuk toplam maliyetle ulasmaya calisir.
+A* algoritmasi, geminin karar verme mekanizmasidir. Gemi, gercek hareket maliyeti ile hedefe kalan tahmini Manhattan uzakligini (sezgisel) birlikte hesaplar. Boylece hem tum hazine sandiklarini toplar hem de kaleye en dusuk toplam maliyetle ulasmaya calisir.
 
-Gorev, tum paketler toplandiktan sonra ajanin hastaneye varmasiyla tamamlanir.
+Gorev, adadaki tum hazineler toplandiktan sonra korsan kalesine varilmasiyla basariyla tamamlanir.
