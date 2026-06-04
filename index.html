@@ -133,6 +133,7 @@
                 <span><i class="legend-dot goal"></i>Kale</span>
                 <span><i class="legend-dot package"></i>Hazine</span>
                 <span><i class="legend-dot wall"></i>Kaya</span>
+                <span><i class="legend-dot enemy"></i>Dusman Gemisi</span>
                 <span><i class="legend-dot risk"></i>Top Mevzisi</span>
                 <span><i class="legend-dot rubble"></i>Batik Gemi</span>
                 <span><i class="legend-dot route"></i>Rota</span>
@@ -185,11 +186,15 @@
                 <div class="brush-row" role="group" aria-label="Hucre tipi">
                   <label class="brush-option">
                     <input type="radio" name="brush" value="." checked>
-                    <span class="swatch road"></span>Kumsal
+                    <span class="swatch road"></span>Deniz
                   </label>
                   <label class="brush-option">
                     <input type="radio" name="brush" value="#">
                     <span class="swatch wall"></span>Kaya
+                  </label>
+                  <label class="brush-option">
+                    <input type="radio" name="brush" value="D">
+                    <span class="swatch enemy"></span>Dusman Gemisi
                   </label>
                   <label class="brush-option">
                     <input type="radio" name="brush" value="R">
@@ -265,6 +270,7 @@
             <h2>Test Ozeti</h2>
             <ul class="test-list">
               <li>Kaya hucresi gecilemez.</li>
+              <li>Dusman gemisi hucresine girince gemi ates acar, dusman batar (maliyet 2).</li>
               <li>Top mevzisi ve batik gemi hucresi daha yuksek maliyetlidir.</li>
               <li>Kaleye ulasmak icin tum hazineler toplanir.</li>
               <li>Rota yoksa korsan hareket etmez.</li>

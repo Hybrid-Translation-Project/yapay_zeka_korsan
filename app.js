@@ -2,10 +2,11 @@
   "use strict";
 
   const TERRAIN = {
-    ".": { name: "Kumsal", cost: 1, className: "road", label: "" },
+    ".": { name: "Deniz", cost: 1, className: "road", label: "" },
     "#": { name: "Kaya", cost: Infinity, className: "wall", label: "" },
     R: { name: "Top Mevzisi", cost: 4, className: "risk", label: "R" },
     E: { name: "Batik Gemi", cost: 6, className: "rubble", label: "E" },
+    D: { name: "Dusman Gemisi", cost: 2, className: "enemy", label: "D" },
     P: { name: "Hazine", cost: 1, className: "package", label: "P" },
     S: { name: "Demir Yeri", cost: 1, className: "start", label: "S" },
     H: { name: "Kale", cost: 1, className: "goal", label: "H" }
@@ -19,15 +20,15 @@
       rows: [
         "S..R..#...P.",
         ".##R..#.#...",
-        "...R....#..#",
+        "...R..D.#..#",
         ".####.###..#",
         "...P..R....#",
         ".#.#.###.R..",
-        ".#.#...#....",
+        ".#.#.D.#....",
         ".#..R..#.##.",
         "...###...P..",
         "##...#..###.",
-        "...R....#...",
+        "..DR....#...",
         ".P..###....H"
       ]
     },
@@ -40,11 +41,11 @@
         ".##.#.##....",
         "...#...#..#.",
         ".#.#.#.#..#.",
-        ".#...P.#....",
+        ".#...P.#..D.",
         ".###.#.####.",
-        ".....#....R.",
+        "..D..#....R.",
         ".###.###.#..",
-        ".P..#...#...",
+        ".P..#.D.#...",
         ".##.#.#.##..",
         "...R#.......",
         "...###.....H"
@@ -58,14 +59,14 @@
         "S.R..#..P...",
         ".#R..#..#...",
         ".#...#...R..",
-        ".#.#...#....",
+        ".#.#.D.#....",
         "...P.#.#....",
         "##.#...#.#..",
-        "...#...#....",
+        "..D#...#....",
         ".#.#.###.##.",
         ".#...R...P..",
         ".##..#..#.#.",
-        "...R.....#..",
+        "...R..D..#..",
         "P....##....H"
       ]
     }

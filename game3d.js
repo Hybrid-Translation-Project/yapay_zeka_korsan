@@ -108,11 +108,12 @@ if (canvas && shell) {
 
   /* ── Pirate Materials ── */
   const materials = {
-    sand: new THREE.MeshStandardMaterial({ color: 0xc4a56e, roughness: 0.95, metalness: 0.02 }),
-    sandAlt: new THREE.MeshStandardMaterial({ color: 0xb89a62, roughness: 0.96, metalness: 0.02 }),
-    wallTile: new THREE.MeshStandardMaterial({ color: 0x3a3228, roughness: 0.96 }),
+    sand: new THREE.MeshStandardMaterial({ color: 0x1f5f82, roughness: 0.34, metalness: 0.25 }),
+    sandAlt: new THREE.MeshStandardMaterial({ color: 0x247594, roughness: 0.3, metalness: 0.28 }),
+    wallTile: new THREE.MeshStandardMaterial({ color: 0x2a2620, roughness: 0.96 }),
     riskTile: new THREE.MeshStandardMaterial({ color: 0x3a1515, roughness: 0.9, emissive: 0x380808, emissiveIntensity: 0.38 }),
-    rubbleTile: new THREE.MeshStandardMaterial({ color: 0x3a3020, roughness: 0.97 }),
+    rubbleTile: new THREE.MeshStandardMaterial({ color: 0x163d52, roughness: 0.4, metalness: 0.22 }),
+    enemyTile: new THREE.MeshStandardMaterial({ color: 0x123445, roughness: 0.42, metalness: 0.2, emissive: 0x200505, emissiveIntensity: 0.18 }),
     rock: new THREE.MeshStandardMaterial({ color: 0x5a5248, roughness: 0.92 }),
     rockDark: new THREE.MeshStandardMaterial({ color: 0x3a342e, roughness: 0.94 }),
     wood: new THREE.MeshStandardMaterial({ color: 0x8a6a3e, roughness: 0.88 }),
@@ -226,6 +227,7 @@ if (canvas && shell) {
 
   const interactiveTiles = [];
   const packageObjects = [];
+  const enemyShips = new Map();
   let lastGridKey = "";
   let lastRouteKey = "";
   let lastStateText = "";
@@ -269,6 +271,7 @@ if (canvas && shell) {
     if (tile === "#") return materials.wallTile;
     if (tile === "R") return materials.riskTile;
     if (tile === "E") return materials.rubbleTile;
+    if (tile === "D") return materials.enemyTile;
     return (r + c) % 2 === 0 ? materials.sand : materials.sandAlt;
   }
 
@@ -346,52 +349,51 @@ if (canvas && shell) {
     group.add(bodyGroup);
     group.scale.setScalar(1.55);
 
-    const robotLoader = new OBJLoader();
-    robotLoader.load(
-      `${ROBOT_MODEL_BASE}lowpoly.obj`,
-      (model) => {
-        const bounds = new THREE.Box3().setFromObject(model);
-        const size = new THREE.Vector3();
-        const center = new THREE.Vector3();
-        bounds.getSize(size);
-        bounds.getCenter(center);
+    /* Muzzle flash (top tetiklenince gosterilir) */
+    const muzzle = new THREE.Mesh(geometries.flame, materials.fireCore);
+    muzzle.scale.setScalar(0.6);
+    muzzle.position.set(0.34, 0.42, 0.18);
+    muzzle.rotation.z = -Math.PI / 2;
+    muzzle.visible = false;
+    group.add(muzzle);
+    group.userData.muzzle = muzzle;
 
-        model.traverse((child) => {
-          if (child.isMesh) {
-            child.material = robotObjMaterial;
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-
-        model.position.x -= center.x;
-        model.position.z -= center.z;
-        model.position.y -= bounds.min.y;
-        model.scale.setScalar(1.25 / Math.max(size.y, 0.001));
-        model.rotation.y = Math.PI;
-
-        const loadedBeacon = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.5, 12), materials.agentAccent);
-        loadedBeacon.position.y = 1.5;
-
-        const loadedBeaconCap = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 10), materials.agentAccent);
-        loadedBeaconCap.position.y = 1.8;
-
-        const loadedLight = new THREE.PointLight(0x25d9ff, 2.6, 4.8);
-        loadedLight.position.set(0, 1.05, 0.25);
-
-        group.remove(bodyGroup);
-        group.userData.wheels.forEach((wheel) => {
-          wheel.visible = false;
-        });
-        group.userData.loadedRobot = model;
-        canvas.dataset.robotModel = "67-robot-1-obj";
-        group.add(model, loadedBeacon, loadedBeaconCap, loadedLight);
-      },
-      undefined,
-      () => {
-        canvas.dataset.robotModel = "fallback";
+    /* Robot yerine korsan gemisi modeli yukle */
+    loadGLB("ship-pirate-medium.glb").then((model) => {
+      if (!model) {
+        canvas.dataset.robotModel = "fallback-robot";
+        return;
       }
-    );
+      const bounds = new THREE.Box3().setFromObject(model);
+      const size = new THREE.Vector3();
+      const center = new THREE.Vector3();
+      bounds.getSize(size);
+      bounds.getCenter(center);
+
+      model.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+
+      model.position.x -= center.x;
+      model.position.z -= center.z;
+      model.position.y -= bounds.min.y;
+      model.scale.setScalar(0.95 / Math.max(size.x, size.z, 0.001));
+
+      const loadedLight = new THREE.PointLight(0x25d9ff, 1.8, 4.5);
+      loadedLight.position.set(0, 0.9, 0.2);
+
+      group.remove(bodyGroup);
+      group.userData.wheels.forEach((wheel) => {
+        wheel.visible = false;
+      });
+      if (group.userData.ring) group.userData.ring.visible = false;
+      group.userData.shipModel = model;
+      canvas.dataset.robotModel = "ship-pirate-medium-glb";
+      group.add(model, loadedLight);
+    });
 
     return group;
   }
@@ -830,6 +832,67 @@ if (canvas && shell) {
     return group;
   }
 
+  /* ── Enemy Ship (Dusman Gemisi) ── */
+  function createEnemyShip(r, c) {
+    const group = new THREE.Group();
+
+    /* Procedural fallback gemi (GLB yuklenince kaldirilir) */
+    const procShip = new THREE.Group();
+    const hull = new THREE.Mesh(geometries.shipHull, materials.woodDark);
+    hull.position.set(0, 0.2, 0);
+    hull.castShadow = true;
+    hull.receiveShadow = true;
+    procShip.add(hull);
+    const mast = new THREE.Mesh(geometries.shipMast, materials.wood);
+    mast.position.set(0, 0.55, 0);
+    mast.castShadow = true;
+    procShip.add(mast);
+    const sail = new THREE.Mesh(geometries.flagCloth, materials.flagRed);
+    sail.position.set(0, 0.62, 0.04);
+    procShip.add(sail);
+    group.add(procShip);
+
+    /* Gizli alev (gemi batinca gosterilir) */
+    const fireElements = new THREE.Group();
+    const flameOuter = new THREE.Mesh(geometries.flame, materials.fire);
+    flameOuter.position.set(0, 0.5, 0);
+    const flameCore = new THREE.Mesh(geometries.flame, materials.fireCore);
+    flameCore.position.set(0, 0.46, 0);
+    flameCore.scale.setScalar(0.58);
+    const fireLight = new THREE.PointLight(0xff6a16, 1.4, 3);
+    fireLight.position.set(0, 0.72, 0);
+    fireElements.add(flameOuter, flameCore, fireLight);
+    fireElements.visible = false;
+    group.add(fireElements);
+
+    group.userData.enemyCell = `${r},${c}`;
+    group.userData.sunk = false;
+    group.userData.sinkStart = undefined;
+    group.userData.fireGroup = fireElements;
+    group.userData.fireLight = fireLight;
+    group.userData.flame = flameOuter;
+    group.userData.baseY = 0;
+    group.userData.bob = seeded(r, c, 21) * Math.PI * 2;
+
+    loadGLB("ship-small.glb").then((model) => {
+      if (model) {
+        group.remove(procShip);
+        model.scale.setScalar(0.26);
+        model.position.set(0, 0.06, 0);
+        model.rotation.y = seeded(r, c, 12) * Math.PI * 2;
+        model.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+        group.add(model);
+      }
+    });
+
+    return group;
+  }
+
   /* ── Cannon Risk Zone ── */
   function createRiskZone() {
     const group = new THREE.Group();
@@ -995,6 +1058,7 @@ if (canvas && shell) {
     disposeObject(terrainRoot);
     interactiveTiles.length = 0;
     packageObjects.length = 0;
+    enemyShips.clear();
     packageIndexByCell = new Map();
 
     const rows = gridRows.length;
@@ -1007,10 +1071,10 @@ if (canvas && shell) {
     ocean.receiveShadow = true;
     terrainRoot.add(ocean);
 
-    /* Island base (sandy) */
+    /* Island base (deniz) */
     const base = new THREE.Mesh(
       new THREE.BoxGeometry(cols * CELL + 1.05, 0.34, rows * CELL + 1.05),
-      new THREE.MeshStandardMaterial({ color: 0xa08550, roughness: 0.92 })
+      new THREE.MeshStandardMaterial({ color: 0x113c54, roughness: 0.4, metalness: 0.2 })
     );
     base.position.y = -0.22;
     base.receiveShadow = true;
@@ -1058,6 +1122,12 @@ if (canvas && shell) {
           const wreck = createShipwreck(true);
           wreck.position.copy(worldPosition(r, c));
           terrainRoot.add(wreck);
+        } else if (tile === "D") {
+          const enemy = createEnemyShip(r, c);
+          enemy.position.copy(worldPosition(r, c));
+          enemy.userData.baseY = enemy.position.y;
+          enemyShips.set(`${r},${c}`, enemy);
+          terrainRoot.add(enemy);
         } else if (tile === "P") {
           const chest = createPackage();
           chest.position.copy(worldPosition(r, c));
@@ -1205,6 +1275,30 @@ if (canvas && shell) {
     for (const pack of packageObjects) {
       const bit = 1 << pack.userData.packageIndex;
       pack.visible = (mask & bit) === 0;
+    }
+
+    /* Dusman gemilerini rota ilerledikce batir (D karolari) */
+    if (enemyShips.size > 0) {
+      if (detail.pathIndex === 0) {
+        enemyShips.forEach((enemy) => {
+          enemy.userData.sunk = false;
+          enemy.userData.sinkStart = undefined;
+          if (enemy.userData.fireGroup) enemy.userData.fireGroup.visible = false;
+        });
+      }
+      for (let i = 0; i <= Math.min(detail.pathIndex, path.length - 1); i += 1) {
+        const pnode = path[i];
+        if (!pnode || pnode.tile !== "D") continue;
+        const enemy = enemyShips.get(`${pnode.r},${pnode.c}`);
+        if (enemy && !enemy.userData.sunk) {
+          enemy.userData.sunk = true;
+          enemy.userData.sinkStart = performance.now() / 1000;
+          if (enemy.userData.fireGroup) enemy.userData.fireGroup.visible = true;
+          if (i === detail.pathIndex) {
+            agent.userData.firing = performance.now() / 1000;
+          }
+        }
+      }
     }
   }
 
@@ -1408,6 +1502,21 @@ if (canvas && shell) {
       });
     }
 
+    /* Gemi yelken/dalga hareketi + namlu flash */
+    if (agent.userData.shipModel) {
+      agent.userData.shipModel.rotation.z = Math.sin(seconds * 1.6) * 0.05;
+      agent.userData.shipModel.rotation.x = Math.sin(seconds * 1.1) * 0.035;
+    }
+    if (agent.userData.muzzle) {
+      const fired = agent.userData.firing;
+      if (fired !== undefined && seconds - fired < 0.45) {
+        agent.userData.muzzle.visible = true;
+        agent.userData.muzzle.scale.setScalar(0.5 + Math.abs(Math.sin(seconds * 40)) * 0.4);
+      } else {
+        agent.userData.muzzle.visible = false;
+      }
+    }
+
     /* Route pulse */
     routeRoot.children.forEach((child) => {
       if (child.userData.routePulseOffset !== undefined) {
@@ -1427,6 +1536,25 @@ if (canvas && shell) {
       }
       if (child.userData.ring) {
         child.userData.ring.rotation.z = -seconds * 1.2;
+      }
+    });
+
+    /* Dusman gemisi batma + alev animasyonu */
+    enemyShips.forEach((enemy) => {
+      if (enemy.userData.sunk) {
+        const start = enemy.userData.sinkStart;
+        const t = start !== undefined ? Math.min(1, (seconds - start) / 2.2) : 1;
+        enemy.position.y = (enemy.userData.baseY || 0) - t * 0.34;
+        enemy.rotation.z = t * 0.5;
+        if (enemy.userData.flame) {
+          enemy.userData.flame.scale.y = 0.86 + Math.sin(seconds * 8.5) * 0.18;
+        }
+        if (enemy.userData.fireLight) {
+          enemy.userData.fireLight.intensity = 1.4 * (1 - t * 0.45);
+        }
+      } else {
+        enemy.position.y = enemy.userData.baseY || 0;
+        enemy.rotation.z = Math.sin(seconds * 1.4 + (enemy.userData.bob || 0)) * 0.04;
       }
     });
 
