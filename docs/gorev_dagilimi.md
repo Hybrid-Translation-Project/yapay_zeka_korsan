@@ -1,10 +1,10 @@
-# Takim Gorev Dagilimi Formu
+# Takım Görev Dağılımı Formu
 
-| Ogrenci Adi Soyadi | Ogrenci No | Gorevi | Katki Aciklamasi |
+| Öğrenci Adı Soyadı | Öğrenci No | Görevi | Katkı Açıklaması |
 | --- | --- | --- | --- |
-| Takim uyesi 1 | ... | Oyun fikri ve senaryo tasarimi | Afet bolgesi senaryosu, grid elemanlari ve oyun kurallari |
-| Takim uyesi 2 | ... | Algoritma gelistirme | A* algoritmasi, maliyet yapisi ve paket maskesi |
-| Takim uyesi 3 | ... | Kodlama ve arayuz | HTML/CSS/JavaScript prototipi ve ajan animasyonu |
-| Takim uyesi 4 | ... | Test, rapor ve sunum | Test senaryolari, rapor taslagi ve sunum akisi |
+| Takım üyesi 1 | ... | Oyun fikri ve senaryo tasarımı | Afet bölgesi senaryosu, grid elemanları ve oyun kuralları |
+| Takım üyesi 2 | ... | Algoritma geliştirme | A* algoritması, maliyet yapısı ve paket maskesi |
+| Takım üyesi 3 | ... | Kodlama ve arayüz | HTML/CSS/JavaScript prototipi ve ajan animasyonu |
+| Takım üyesi 4 | ... | Test, rapor ve sunum | Test senaryoları, rapor taslağı ve sunum akışı |
 
-Not: Teslimden once takim uyelerine gore satirlar guncellenmelidir.
+Not: Teslimden önce takım üyelerine göre satırlar güncellenmelidir.

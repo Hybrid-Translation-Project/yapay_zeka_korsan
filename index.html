@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Korsan Hazine Avcisi</title>
+    <title>Korsan Hazine Avcısı</title>
     <meta name="description" content="A* algoritması ile korsan hazine avı - Kafatası Adası'nda en güvenli rotayı bul!">
-    <link rel="stylesheet" href="styles.css?v=24">
+    <link rel="stylesheet" href="styles.css?v=26">
   </head>
   <body>
     <main class="app-shell">
@@ -13,15 +13,15 @@
         <img class="intro-bg" src="assets/generated/splash-map.png" alt="" aria-hidden="true">
         <div class="intro-copy">
           <p class="eyebrow">Karayip Hazine Operasyonu</p>
-          <h1 id="intro-title">Korsan Hazine Avcisi</h1>
+          <h1 id="intro-title">Korsan Hazine Avcısı</h1>
           <p class="story-lead">
-            Karayip Denizi'nin en tehlikeli adasi olan Kafatasi Adasi'nda efsanevi bir hazine sakli.
-            Cesur robot korsanimiz RX-12, kayaliklardan, top mevzilerinden ve batik gemi
-            enkazlarindan gecerek tum hazine sandiklarini toplamali ve korsan kalesine guvenli
-            sekilde ulasmali. En kisa yolu degil, en guvenli ve en dusuk maliyetli rotayi bulmak sart!
+            Karayip Denizi'nin en tehlikeli adası olan Kafatası Adası'nda efsanevi bir hazine saklı.
+            Cesur robot korsanımız RX-12, kayalıklardan, top mevzilerinden ve batık gemi
+            enkazlarından geçerek tüm hazine sandıklarını toplamalı ve korsan kalesine güvenli
+            şekilde ulaşmalı. En kısa yolu değil, en güvenli ve en düşük maliyetli rotayı bulmak şart!
           </p>
 
-          <div class="mission-brief" aria-label="Gorev ozeti">
+          <div class="mission-brief" aria-label="Görev özeti">
             <div class="brief-item">
               <span>Ada</span>
               <strong>12 x 12</strong>
@@ -31,24 +31,24 @@
               <strong>A*</strong>
             </div>
             <div class="brief-item">
-              <span>Gorev</span>
+              <span>Görev</span>
               <strong>Hazine + Kale</strong>
             </div>
           </div>
 
-          <div class="asset-dock" aria-label="Gorev varliklari">
+          <div class="asset-dock" aria-label="Görev varlıkları">
             <article class="asset-card">
-              <img src="assets/generated/robot-agent.png" alt="Robot korsan">
+              <img src="assets/generated/korsanrobot.png" alt="Robot korsan">
               <div>
                 <span>Kaptan</span>
                 <strong>RX-12 Robot Korsan</strong>
               </div>
             </article>
             <article class="asset-card">
-              <img src="assets/generated/aid-package.png" alt="Hazine sandigi">
+              <img src="assets/generated/hazine-sandigi.png" alt="Hazine sandığı">
               <div>
                 <span>Ganimet</span>
-                <strong>Hazine Sandigi</strong>
+                <strong>Hazine Sandığı</strong>
               </div>
             </article>
             <article class="asset-card">
@@ -63,17 +63,17 @@
           <div class="mission-actions">
             <button id="startMissionBtn" class="main-menu-action" type="button">
               <span class="button-icon play-icon" aria-hidden="true"></span>
-              Maceraya Atil
+              Maceraya Atıl
             </button>
             <button id="quickPlanBtn" class="secondary-menu-action" type="button">
               <span class="button-icon route-icon" aria-hidden="true"></span>
-              Hazine Haritasi
+              Hazine Haritası
             </button>
           </div>
         </div>
 
-        <div class="intro-visual" aria-label="Korsan adasi oyun gorseli">
-          <img src="assets/generated/splash-map.png" alt="Korsan adasi, hazine sandiklari, kale ve engellerden olusan macera haritasi">
+        <div class="intro-visual" aria-label="Korsan adası oyun görseli">
+          <img src="assets/generated/splash-map.png" alt="Korsan adası, hazine sandıkları, kale ve engellerden oluşan macera haritası">
           <div class="signal-strip" aria-hidden="true">
             <span></span>
             <span></span>
@@ -87,26 +87,26 @@
         <section class="stage" aria-labelledby="project-title">
           <header class="topbar">
             <div>
-              <p class="eyebrow">BIL 210 Yapay Zeka Hackathon Prototipi</p>
-              <h1 id="project-title">Korsan Hazine Avcisi</h1>
+              <p class="eyebrow">BİL 210 Yapay Zeka Hackathon Prototipi</p>
+              <h1 id="project-title">Korsan Hazine Avcısı</h1>
             </div>
             <div class="topbar-actions">
               <button id="storyBtn" class="ghost-action" type="button">
                 <span class="button-icon story-icon" aria-hidden="true"></span>
                 Efsane
               </button>
-              <div class="mission-badge" id="missionBadge">Hazir</div>
+              <div class="mission-badge" id="missionBadge">Hazır</div>
             </div>
           </header>
 
           <div class="workspace">
-            <section class="board-panel" aria-label="Oyun alani">
+            <section class="board-panel" aria-label="Oyun alanı">
               <div class="board-header">
                 <div>
-                  <h2 id="mapTitle">Kafatasi Adasi</h2>
-                  <p id="mapSubtitle">Korsan hazine sandiklarini toplar ve kaleye en dusuk maliyetle ulasir.</p>
+                  <h2 id="mapTitle">Kafatası Adası</h2>
+                  <p id="mapSubtitle">Korsan hazine sandıklarını toplar ve kaleye en düşük maliyetle ulaşır.</p>
                 </div>
-                <div class="map-switcher" role="group" aria-label="Harita secimi">
+                <div class="map-switcher" role="group" aria-label="Harita seçimi">
                   <button class="chip active" data-map="kafatasi-adasi" type="button">A</button>
                   <button class="chip" data-map="kayalik-gecit" type="button">B</button>
                   <button class="chip" data-map="batik-gemi-koyu" type="button">C</button>
@@ -114,17 +114,17 @@
               </div>
 
               <div class="scene-shell" id="sceneShell">
-                <canvas id="scene3d" aria-label="3D korsan adasi oyun sahnesi"></canvas>
+                <canvas id="scene3d" aria-label="3D korsan adası oyun sahnesi"></canvas>
                 <div class="scene-overlay" aria-hidden="true">
-                  <span class="scene-tag">A* Taktik Goruntu</span>
-                  <span class="scene-tag">3D Korsan Adasi</span>
+                  <span class="scene-tag">A* Taktik Görüntü</span>
+                  <span class="scene-tag">3D Korsan Adası</span>
                 </div>
               </div>
 
               <details class="map-debug">
-                <summary>2D taktik haritayi goster</summary>
+                <summary>2D taktik haritayı göster</summary>
                 <div class="grid-wrap">
-                  <div id="grid" class="grid" aria-label="12 x 12 grid oyun haritasi"></div>
+                  <div id="grid" class="grid" aria-label="12 x 12 grid oyun haritası"></div>
                 </div>
               </details>
 
@@ -134,7 +134,7 @@
                 <span><i class="legend-dot package"></i>Hazine</span>
                 <span><i class="legend-dot wall"></i>Kaya</span>
                 <span><i class="legend-dot risk"></i>Top Mevzisi</span>
-                <span><i class="legend-dot rubble"></i>Batik Gemi</span>
+                <span><i class="legend-dot rubble"></i>Batık Gemi</span>
                 <span><i class="legend-dot route"></i>Rota</span>
               </div>
             </section>
@@ -145,32 +145,32 @@
                 <div class="button-grid">
                   <button id="solveBtn" class="primary-action" type="button">
                     <span class="button-icon play-icon" aria-hidden="true"></span>
-                    Rotayi Bul
+                    Rotayı Bul
                   </button>
                   <button id="runBtn" type="button">
                     <span class="button-icon agent-icon" aria-hidden="true"></span>
-                    Korsani Yolla
+                    Korsanı Yolla
                   </button>
                   <button id="stepBtn" type="button">
                     <span class="button-icon step-icon" aria-hidden="true"></span>
-                    Adim At
+                    Adım At
                   </button>
                   <button id="resetBtn" type="button">
                     <span class="button-icon reset-icon" aria-hidden="true"></span>
-                    Sifirla
+                    Sıfırla
                   </button>
                 </div>
               </section>
 
               <section class="panel-block loadout-panel">
-                <h2>Murettebat</h2>
+                <h2>Mürettebat</h2>
                 <div class="loadout-grid">
                   <div class="loadout-card">
-                    <img src="assets/generated/robot-agent.png" alt="Robot korsan">
+                    <img src="assets/generated/korsanrobot.png" alt="Robot korsan">
                     <span>Kaptan</span>
                   </div>
                   <div class="loadout-card">
-                    <img src="assets/generated/aid-package.png" alt="Hazine sandigi">
+                    <img src="assets/generated/hazine-sandigi.png" alt="Hazine sandığı">
                     <span>Hazine</span>
                   </div>
                   <div class="loadout-card">
@@ -181,8 +181,8 @@
               </section>
 
               <section class="panel-block">
-                <h2>Ada Haritasi</h2>
-                <div class="brush-row" role="group" aria-label="Hucre tipi">
+                <h2>Ada Haritası</h2>
+                <div class="brush-row" role="group" aria-label="Hücre tipi">
                   <label class="brush-option">
                     <input type="radio" name="brush" value="." checked>
                     <span class="swatch road"></span>Kumsal
@@ -197,7 +197,7 @@
                   </label>
                   <label class="brush-option">
                     <input type="radio" name="brush" value="E">
-                    <span class="swatch rubble"></span>Batik Gemi
+                    <span class="swatch rubble"></span>Batık Gemi
                   </label>
                   <label class="brush-option">
                     <input type="radio" name="brush" value="P">
@@ -210,11 +210,11 @@
                 <h2>Korsan Durumu</h2>
                 <div class="stats">
                   <div>
-                    <span>Guncel maliyet</span>
+                    <span>Güncel maliyet</span>
                     <strong id="costValue">0</strong>
                   </div>
                   <div>
-                    <span>Adim</span>
+                    <span>Adım</span>
                     <strong id="stepValue">0</strong>
                   </div>
                   <div>
@@ -222,11 +222,11 @@
                     <strong id="packageValue">0/0</strong>
                   </div>
                   <div>
-                    <span>Kesfedilen alan</span>
+                    <span>Keşfedilen alan</span>
                     <strong id="visitedValue">0</strong>
                   </div>
                 </div>
-                <p class="status-line" id="statusLine">Ada haritasi hazir. A* rotasi hesaplanabilir.</p>
+                <p class="status-line" id="statusLine">Ada haritası hazır. A* rotası hesaplanabilir.</p>
               </section>
 
               <section class="panel-block">
@@ -234,19 +234,19 @@
                 <dl class="model-list">
                   <div>
                     <dt>Durum</dt>
-                    <dd>(satir, sutun, toplanan hazine maskesi)</dd>
+                    <dd>(satır, sütun, toplanan hazine maskesi)</dd>
                   </div>
                   <div>
                     <dt>Eylem</dt>
-                    <dd>Yukari, asagi, sol, sag</dd>
+                    <dd>Yukarı, aşağı, sol, sağ</dd>
                   </div>
                   <div>
-                    <dt>Basari</dt>
-                    <dd>Tum hazineleri toplayip kaleye en dusuk maliyetle ulasmak</dd>
+                    <dt>Başarı</dt>
+                    <dd>Tüm hazineleri toplayıp kaleye en düşük maliyetle ulaşmak</dd>
                   </div>
                   <div>
                     <dt>Sezgisel</dt>
-                    <dd>Manhattan uzakligi</dd>
+                    <dd>Manhattan uzaklığı</dd>
                   </div>
                 </dl>
               </section>
@@ -254,19 +254,19 @@
           </div>
         </section>
 
-        <section class="analysis-panel" aria-label="Algoritma ciktisi">
+        <section class="analysis-panel" aria-label="Algoritma çıktısı">
           <div>
-            <h2>A* Karar Gunlugu</h2>
+            <h2>A* Karar Günlüğü</h2>
             <ol id="decisionLog" class="decision-log">
-              <li>Rota hesaplaninca ilk kararlar burada gorunur.</li>
+              <li>Rota hesaplanınca ilk kararlar burada görünür.</li>
             </ol>
           </div>
           <div>
-            <h2>Test Ozeti</h2>
+            <h2>Test Özeti</h2>
             <ul class="test-list">
-              <li>Kaya hucresi gecilemez.</li>
-              <li>Top mevzisi ve batik gemi hucresi daha yuksek maliyetlidir.</li>
-              <li>Kaleye ulasmak icin tum hazineler toplanir.</li>
+              <li>Kaya hücresi geçilemez.</li>
+              <li>Top mevzisi ve batık gemi hücresi daha yüksek maliyetlidir.</li>
+              <li>Kaleye ulaşmak için tüm hazineler toplanır.</li>
               <li>Rota yoksa korsan hareket etmez.</li>
             </ul>
           </div>
@@ -275,7 +275,7 @@
     </main>
 
     <script type="application/json" id="gameStateData">{}</script>
-    <script src="app.js?v=24"></script>
-    <script type="module" src="game3d.js?v=24"></script>
+    <script src="app.js?v=26"></script>
+    <script type="module" src="game3d.js?v=26"></script>
   </body>
 </html>

@@ -1,90 +1,90 @@
-# Akilli Kurtarma Ajani Proje Raporu
+# Akıllı Kurtarma Ajanı Proje Raporu
 
-## 1. Proje Basligi
+## 1. Proje Başlığı
 
-Akilli Kurtarma Ajani: A* Algoritmasi ile Grid Tabanli Afet Bolgesi Rota Planlama Oyunu
+Akıllı Kurtarma Ajanı: A* Algoritması ile Grid Tabanlı Afet Bölgesi Rota Planlama Oyunu
 
-## 2. Takim Uyeleri
+## 2. Takım Üyeleri
 
-| Ogrenci Adi Soyadi | Ogrenci No |
+| Öğrenci Adı Soyadı | Öğrenci No |
 | --- | --- |
-| Takim uyesi 1 | ... |
-| Takim uyesi 2 | ... |
-| Takim uyesi 3 | ... |
+| Takım üyesi 1 | ... |
+| Takım üyesi 2 | ... |
+| Takım üyesi 3 | ... |
 
 ## 3. Proje Fikri ve Oyun Senaryosu
 
-Proje, afet sonrasi olusan bir sehir haritasinda kurtarma ajani kontrolunu konu alir. Kuzey Mahallesi'nde yollarin bir kismi kapanmis, bazi bolgeler riskli veya enkazli hale gelmistir. Hastanedeki ekipler dagilmis yardim paketlerini beklemektedir. Ajan baslangic noktasindan hareket eder, yardim paketlerini toplar ve hastaneye ulasmaya calisir. Haritada normal yollar, kapali yollar, riskli bolgeler ve enkazli bolgeler bulunur.
+Proje, afet sonrası oluşan bir şehir haritasında kurtarma ajanı kontrolünü konu alır. Kuzey Mahallesi'nde yolların bir kısmı kapanmış, bazı bölgeler riskli veya enkazlı hale gelmiştir. Hastanedeki ekipler dağılmış yardım paketlerini beklemektedir. Ajan başlangıç noktasından hareket eder, yardım paketlerini toplar ve hastaneye ulaşmaya çalışır. Haritada normal yollar, kapalı yollar, riskli bölgeler ve enkazlı bölgeler bulunur.
 
-Bu senaryoda en kisa yol her zaman en iyi yol degildir. Ajan, hem paket toplama zorunlulugunu hem de hucre maliyetlerini dikkate alarak rota secmelidir.
+Bu senaryoda en kısa yol her zaman en iyi yol değildir. Ajan, hem paket toplama zorunluluğunu hem de hücre maliyetlerini dikkate alarak rota seçmelidir.
 
-## 4. Problem Tanimi
+## 4. Problem Tanımı
 
-Problem, maliyetli grid uzerinde hedefe ulasma problemidir. Ajan, tum yardim paketlerini topladiktan sonra hastane hucresine ulasmalidir. Engel hucresinden gecemez. Riskli ve enkazli hucresinden gecebilir fakat bu hucreslerin hareket maliyeti daha yuksektir.
+Problem, maliyetli grid üzerinde hedefe ulaşma problemidir. Ajan, tüm yardım paketlerini topladıktan sonra hastane hücresine ulaşmalıdır. Engel hücresinden geçemez. Riskli ve enkazlı hücrelerden geçebilir fakat bu hücrelerin hareket maliyeti daha yüksektir.
 
-## 5. Problem Uzayi Modeli
+## 5. Problem Uzayı Modeli
 
-| Baslik | Aciklama |
+| Başlık | Açıklama |
 | --- | --- |
-| Baslangic durumu | Ajanin `S` hucresinde bulunmasi ve paket maskesinin bos olmasi |
-| Hedef durumu | Tum paketlerin toplanmasi ve ajanin `H` hucresinde bulunmasi |
-| Durumlar | `(satir, sutun, toplananPaketMaskesi)` |
-| Eylemler | Yukari, asagi, sol, sag |
-| Gecisler | Ajan gecerli komsu hucreye hareket eder |
-| Kisitlar | Grid disina cikilamaz, `#` engeli gecilemez |
-| Engel yapisi | Kapali yol veya gecilemeyen enkaz `#` ile modellenir |
-| Maliyet yapisi | Yol 1, riskli bolge 4, enkaz 6 |
-| Basari olcutu | Tum paketleri toplayip hastaneye en dusuk toplam maliyetle ulasmak |
+| Başlangıç durumu | Ajanın `S` hücresinde bulunması ve paket maskesinin boş olması |
+| Hedef durumu | Tüm paketlerin toplanması ve ajanın `H` hücresinde bulunması |
+| Durumlar | `(satır, sütun, toplananPaketMaskesi)` |
+| Eylemler | Yukarı, aşağı, sol, sağ |
+| Geçişler | Ajan geçerli komşu hücreye hareket eder |
+| Kısıtlar | Grid dışına çıkılamaz, `#` engeli geçilemez |
+| Engel yapısı | Kapalı yol veya geçilemeyen enkaz `#` ile modellenir |
+| Maliyet yapısı | Yol 1, riskli bölge 4, enkaz 6 |
+| Başarı ölçütü | Tüm paketleri toplayıp hastaneye en düşük toplam maliyetle ulaşmak |
 
-## 6. Kullanilan Arama Algoritmasi
+## 6. Kullanılan Arama Algoritması
 
-Projede A* algoritmasi kullanilmistir. A*, gercek yol maliyeti ile hedefe kalan tahmini uzakligi birlikte degerlendirir.
+Projede A* algoritması kullanılmıştır. A*, gerçek yol maliyeti ile hedefe kalan tahmini uzaklığı birlikte değerlendirir.
 
-Formul:
+Formül:
 
 ```text
 f(n) = g(n) + h(n)
 ```
 
-- `g(n)`: Baslangictan mevcut duruma kadar olan gercek toplam maliyet.
-- `h(n)`: Kalan paketler ve hedef icin Manhattan uzakligi tabanli sezgisel tahmin.
+- `g(n)`: Başlangıçtan mevcut duruma kadar olan gerçek toplam maliyet.
+- `h(n)`: Kalan paketler ve hedef için Manhattan uzaklığı tabanlı sezgisel tahmin.
 
-A* algoritmasi bu proje icin uygundur cunku grid uzerinde hem engeller hem de farkli hucre maliyetleri bulunur.
+A* algoritması bu proje için uygundur çünkü grid üzerinde hem engeller hem de farklı hücre maliyetleri bulunur.
 
 ## 7. Ajan Karar Verme Mekanizmasi
 
-Ajan her adimda acik dugumler arasindan `f(n)` degeri en dusuk olan durumu secer. Engel hucresini eler, maliyetli hucresleri daha pahali kabul eder ve paket toplama durumunu durum modeline dahil eder. Paket toplandiginda paket maskesi guncellenir. Hedef durumu ancak tum paketler toplandiktan sonra gecerlidir.
+Ajan her adımda açık düğümler arasından `f(n)` değeri en düşük olan durumu seçer. Engel hücresini eler, maliyetli hücreleri daha pahalı kabul eder ve paket toplama durumunu durum modeline dahil eder. Paket toplandığında paket maskesi güncellenir. Hedef durumu ancak tüm paketler toplandıktan sonra geçerlidir.
 
-## 8. Kullanilan Araclar ve Teknolojiler
+## 8. Kullanılan Araçlar ve Teknolojiler
 
 - HTML
 - CSS
 - JavaScript
 - Three.js
-- A* arama algoritmasi
-- Tarayici tabanli statik 3D prototip
+- A* arama algoritması
+- Tarayıcı tabanlı statik 3D prototip
 
-## 9. Uygulama Ekran Goruntuleri
+## 9. Uygulama Ekran Görüntüleri
 
-Ekran goruntuleri `docs/screenshots` klasorune eklenebilir.
+Ekran görüntüleri `docs/screenshots` klasörüne eklenebilir.
 
-## 10. Test Sonuclari
+## 10. Test Sonuçları
 
-| Test | Beklenen Sonuc | Sonuc |
+| Test | Beklenen Sonuç | Sonuç |
 | --- | --- | --- |
-| Hazir harita A | Tum paketler toplanarak hedefe ulasilir | Basarili |
-| Hazir harita B | Kapali koridorlara ragmen rota bulunur | Basarili |
-| Hazir harita C | Risk maliyetleri hesaba katilir | Basarili |
-| Kapali hedef testi | Rota bulunamaz | Basarili |
+| Hazır harita A | Tüm paketler toplanarak hedefe ulaşılır | Başarılı |
+| Hazır harita B | Kapalı koridorlara rağmen rota bulunur | Başarılı |
+| Hazır harita C | Risk maliyetleri hesaba katılır | Başarılı |
+| Kapalı hedef testi | Rota bulunamaz | Başarılı |
 
-## 11. Sonuc ve Degerlendirme
+## 11. Sonuç ve Değerlendirme
 
-Proje, grid tabanli bir yapay zeka ajani oyunu olarak calisan prototip uretmistir. Ajan, A* algoritmasi ile maliyetli rota planlamasi yapar. Problem uzayina paket toplama bilgisi de dahil edildigi icin ajan sadece hedefe gitmekle kalmaz, gorev kosulunu da tamamlar.
+Proje, grid tabanlı bir yapay zeka ajanı oyunu olarak çalışan prototip üretmiştir. Ajan, A* algoritması ile maliyetli rota planlaması yapar. Problem uzayına paket toplama bilgisi de dahil edildiği için ajan sadece hedefe gitmekle kalmaz, görev koşulunu da tamamlar.
 
-## 12. Yapay Zeka Araclari Kullanimi
+## 12. Yapay Zeka Araçları Kullanımı
 
-Bu projede yapay zeka araclarindan kod taslagi olusturma, algoritma mantigini duzenleme, hata giderme ve rapor taslagi hazirlama amaciyla destek alinmistir. Proje fikri, oyun kurallari, algoritma uyarlamasi ve nihai uygulama takim tarafindan incelenerek teslim edilmelidir.
+Bu projede yapay zeka araçlarından kod taslağı oluşturma, algoritma mantığını düzenleme, hata giderme ve rapor taslağı hazırlama amacıyla destek alınmıştır. Proje fikri, oyun kuralları, algoritma uyarlaması ve nihai uygulama takım tarafından incelenerek teslim edilmelidir.
 
-## 13. Takim Gorev Dagilimi
+## 13. Takım Görev Dağılımı
 
-Takim gorev dagilimi `docs/gorev_dagilimi.md` dosyasinda yer alir.
+Takım görev dağılımı `docs/gorev_dagilimi.md` dosyasında yer alır.

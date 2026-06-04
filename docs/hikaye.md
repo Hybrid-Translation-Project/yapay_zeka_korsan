@@ -1,11 +1,11 @@
-# Akilli Kurtarma Ajani Hikaye Metni
+# Akıllı Kurtarma Ajanı Hikaye Metni
 
-Kuzey Mahallesi'nde gece yarisi buyuk bir sarsinti olur. Haberlesme hatlari zayiflar, yollarin bir kismi kapanir ve bazi sokaklar enkazla doldugu icin gecis maliyeti artar. Hastanedeki ekipler, mahalleye dagilmis yardim paketlerini beklemektedir.
+Kuzey Mahallesi'nde gece yarısı büyük bir sarsıntı olur. Haberleşme hatları zayıflar, yolların bir kısmı kapanır ve bazı sokaklar enkazla dolduğu için geçiş maliyeti artar. Hastanedeki ekipler, mahalleye dağılmış yardım paketlerini beklemektedir.
 
-Kurtarma ajani, afet bolgesinin 12x12 grid haritasini alir. Haritada baslangic noktasi, hastane, kapali yollar, riskli bolgeler, enkazli alanlar ve yardim paketleri vardir. Ajanin gorevi sadece hastaneye ulasmak degildir; once tum yardim paketlerini toplamalidir.
+Kurtarma ajanı, afet bölgesinin 12x12 grid haritasını alır. Haritada başlangıç noktası, hastane, kapalı yollar, riskli bölgeler, enkazlı alanlar ve yardım paketleri vardır. Ajanın görevi sadece hastaneye ulaşmak değildir; önce tüm yardım paketlerini toplamalıdır.
 
-Ajan her hamlede yukari, asagi, sol veya sag yonde ilerleyebilir. Kapali yollardan gecemez. Riskli bolgeler ve enkazli alanlar daha yuksek maliyetlidir. Bu nedenle en kisa rota her zaman en iyi rota olmayabilir.
+Ajan her hamlede yukarı, aşağı, sol veya sağ yönde ilerleyebilir. Kapalı yollardan geçemez. Riskli bölgeler ve enkazlı alanlar daha yüksek maliyetlidir. Bu nedenle en kısa rota her zaman en iyi rota olmayabilir.
 
-A* algoritmasi, ajanin karar verme mekanizmasidir. Ajan, gercek maliyet ile hedefe kalan tahmini uzakligi birlikte hesaplar. Boylece hem paketleri toplar hem de hastaneye en dusuk toplam maliyetle ulasmaya calisir.
+A* algoritması, ajanın karar verme mekanizmasıdır. Ajan, gerçek maliyet ile hedefe kalan tahmini uzaklığı birlikte hesaplar. Böylece hem paketleri toplar hem de hastaneye en düşük toplam maliyetle ulaşmaya çalışır.
 
-Gorev, tum paketler toplandiktan sonra ajanin hastaneye varmasiyla tamamlanir.
+Görev, tüm paketler toplandıktan sonra ajanın hastaneye varmasıyla tamamlanır.

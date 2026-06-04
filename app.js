@@ -5,7 +5,7 @@
     ".": { name: "Kumsal", cost: 1, className: "road", label: "" },
     "#": { name: "Kaya", cost: Infinity, className: "wall", label: "" },
     R: { name: "Top Mevzisi", cost: 4, className: "risk", label: "R" },
-    E: { name: "Batik Gemi", cost: 6, className: "rubble", label: "E" },
+    E: { name: "Batık Gemi", cost: 6, className: "rubble", label: "E" },
     P: { name: "Hazine", cost: 1, className: "package", label: "P" },
     S: { name: "Demir Yeri", cost: 1, className: "start", label: "S" },
     H: { name: "Kale", cost: 1, className: "goal", label: "H" }
@@ -14,8 +14,8 @@
   const MAP_PRESETS = [
     {
       id: "kafatasi-adasi",
-      title: "Kafatasi Adasi",
-      subtitle: "Korsan hazine sandiklarini toplar ve kaleye en dusuk maliyetle ulasir.",
+      title: "Kafatası Adası",
+      subtitle: "Korsan hazine sandıklarını toplar ve kaleye en düşük maliyetle ulaşır.",
       rows: [
         "S..R..#...P.",
         ".##R..#.#...",
@@ -33,8 +33,8 @@
     },
     {
       id: "kayalik-gecit",
-      title: "Kayalik Gecit",
-      subtitle: "Kapali yollar korsani daha uzun ama ucuz gecitlere zorlar.",
+      title: "Kayalık Geçit",
+      subtitle: "Kapalı yollar korsanı daha uzun ama ucuz geçitlere zorlar.",
       rows: [
         "S...#...P...",
         ".##.#.##....",
@@ -52,8 +52,8 @@
     },
     {
       id: "batik-gemi-koyu",
-      title: "Batik Gemi Koyu",
-      subtitle: "Top mevzileri ve batik gemi enkazlari rota maliyetini belirgin bicimde degistirir.",
+      title: "Batık Gemi Koyu",
+      subtitle: "Top mevzileri ve batık gemi enkazları rota maliyetini belirgin biçimde değiştirir.",
       rows: [
         "S.R..#..P...",
         ".#R..#..#...",
@@ -72,10 +72,10 @@
   ];
 
   const DIRECTIONS = [
-    { dr: -1, dc: 0, name: "yukari" },
-    { dr: 1, dc: 0, name: "asagi" },
+    { dr: -1, dc: 0, name: "yukarı" },
+    { dr: 1, dc: 0, name: "aşağı" },
     { dr: 0, dc: -1, name: "sol" },
-    { dr: 0, dc: 1, name: "sag" }
+    { dr: 0, dc: 1, name: "sağ" }
   ];
 
   const MAX_PACKAGES = 8;
@@ -103,8 +103,8 @@
       }
     }
 
-    if (!start) throw new Error("Demir yeri bulunamadi.");
-    if (!goal) throw new Error("Kale bulunamadi.");
+    if (!start) throw new Error("Demir yeri bulunamadı.");
+    if (!goal) throw new Error("Kale bulunamadı.");
     if (packages.length > MAX_PACKAGES) throw new Error("En fazla 8 hazine desteklenir.");
 
     const packageByCell = new Map(packages.map((pkg) => [`${pkg.r},${pkg.c}`, pkg.index]));
@@ -379,7 +379,7 @@
         const packageCount = state.grid.flat().filter((cell) => cell === "P").length;
         if (state.grid[r][c] !== "P" && packageCount >= MAX_PACKAGES) {
           elements.statusLine.textContent = "En fazla 8 hazine desteklenir.";
-          setBadge("Sinir", "alert");
+          setBadge("Sınır", "alert");
           return false;
         }
       }
@@ -387,8 +387,8 @@
       state.grid[r][c] = brush;
       state.result = null;
       state.pathIndex = 0;
-      setBadge("Duzenlendi");
-      elements.statusLine.textContent = "Ada haritasi degisti. Rota yeniden hesaplanmali.";
+      setBadge("Düzenlendi");
+      elements.statusLine.textContent = "Ada haritası değişti. Rota yeniden hesaplanmalı.";
       render();
       return true;
     }
@@ -412,7 +412,7 @@
           button.className = `cell ${terrain.className}`;
           button.dataset.row = String(r);
           button.dataset.col = String(c);
-          button.setAttribute("aria-label", `${r + 1}. satir ${c + 1}. sutun ${terrain.name}`);
+          button.setAttribute("aria-label", `${r + 1}. satır ${c + 1}. sütun ${terrain.name}`);
 
           if (routeCells.has(`${r},${c}`) && tile !== "S" && tile !== "H") {
             button.classList.add("route");
@@ -439,7 +439,7 @@
       elements.decisionLog.innerHTML = "";
       if (!result || result.decisionLog.length === 0) {
         const li = documentRef.createElement("li");
-        li.textContent = "Rota hesaplaninca ilk kararlar burada gorunur.";
+        li.textContent = "Rota hesaplanınca ilk kararlar burada görünür.";
         elements.decisionLog.appendChild(li);
         return;
       }
@@ -485,10 +485,10 @@
         state.result = findRescuePath(state.grid);
         if (state.result.success) {
           setBadge("Rota bulundu", "done");
-          elements.statusLine.textContent = `A* ${state.result.steps} adimlik rotayi ${state.result.cost} maliyetle buldu.`;
+          elements.statusLine.textContent = `A* ${state.result.steps} adımlık rotayı ${state.result.cost} maliyetle buldu.`;
         } else {
           setBadge("Rota yok", "alert");
-          elements.statusLine.textContent = "Bu adada tum hazineleri toplayip kaleye ulasan rota bulunamadi.";
+          elements.statusLine.textContent = "Bu adada tüm hazineleri toplayıp kaleye ulaşan rota bulunamadı.";
         }
       } catch (error) {
         state.result = null;
@@ -505,8 +505,8 @@
       }
       if (state.pathIndex >= state.result.path.length - 1) {
         stopTimer();
-        setBadge("Tamamlandi", "done");
-        elements.statusLine.textContent = "Korsan tum hazineleri toplayip kaleye ulasti!";
+        setBadge("Tamamlandı", "done");
+        elements.statusLine.textContent = "Korsan tüm hazineleri toplayıp kaleye ulaştı!";
       }
       render();
     }
@@ -525,8 +525,8 @@
       state.grid = cloneRows(selected.rows);
       state.result = null;
       state.pathIndex = 0;
-      setBadge("Hazir");
-      elements.statusLine.textContent = "Ada haritasi hazir. A* rotasi hesaplanabilir.";
+      setBadge("Hazır");
+      elements.statusLine.textContent = "Ada haritası hazır. A* rotası hesaplanabilir.";
       elements.mapButtons.forEach((button) => {
         button.classList.toggle("active", button.dataset.map === selected.id);
       });

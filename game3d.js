@@ -368,7 +368,7 @@ if (canvas && shell) {
         model.position.z -= center.z;
         model.position.y -= bounds.min.y;
         model.scale.setScalar(1.25 / Math.max(size.y, 0.001));
-        model.rotation.y = Math.PI;
+        model.rotation.y = 0;
 
         const loadedBeacon = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.5, 12), materials.agentAccent);
         loadedBeacon.position.y = 1.5;

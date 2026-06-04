@@ -3,10 +3,10 @@ const { MAP_PRESETS, findRescuePath } = require("../app.js");
 
 for (const preset of MAP_PRESETS) {
   const result = findRescuePath(preset.rows);
-  assert.equal(result.success, true, `${preset.id} icin rota bulunmali`);
-  assert.equal(result.collected, result.packages, `${preset.id} icin tum paketler toplanmali`);
-  assert.equal(result.path.at(-1).tile, "H", `${preset.id} hastanede bitmeli`);
-  assert.ok(result.cost > 0, `${preset.id} maliyeti pozitif olmali`);
+  assert.equal(result.success, true, `${preset.id} için rota bulunmalı`);
+  assert.equal(result.collected, result.packages, `${preset.id} için tüm paketler toplanmalı`);
+  assert.equal(result.path.at(-1).tile, "H", `${preset.id} kalede bitmeli`);
+  assert.ok(result.cost > 0, `${preset.id} maliyeti pozitif olmalı`);
 }
 
 const blockedMap = [
@@ -25,6 +25,6 @@ const blockedMap = [
 ];
 
 const blockedResult = findRescuePath(blockedMap);
-assert.equal(blockedResult.success, false, "Kapali haritada rota bulunmamali");
+assert.equal(blockedResult.success, false, "Kapalı haritada rota bulunmamalı");
 
-console.log("Tum testler basarili.");
+console.log("Tüm testler başarılı.");
