@@ -690,19 +690,19 @@ if (canvas && shell) {
 
     // Build procedural fallback based on category
     if (category === "rocks" || category === "sandRocks") {
-      const rockCount = 2 + Math.floor(seed * 3);
+      const rockCount = 3 + Math.floor(seed * 3);
       for (let i = 0; i < rockCount; i++) {
         const s = seeded(r, c, i * 7 + 3);
         const rockGeo = i % 2 === 0 ? geometries.barrierRock : geometries.rock;
         const rockMat = category === "rocks" ? (i % 3 === 0 ? materials.rockDark : materials.rock) : (i % 2 === 0 ? materials.sand : materials.wood);
         const rock = new THREE.Mesh(rockGeo, rockMat);
         rock.position.set(
-          (seeded(r, c, i * 5 + 1) - 0.5) * 0.42,
-          0.15 + s * 0.2,
-          (seeded(r, c, i * 5 + 2) - 0.5) * 0.42
+          (seeded(r, c, i * 5 + 1) - 0.5) * 0.44,
+          0.25 + s * 0.38,
+          (seeded(r, c, i * 5 + 2) - 0.5) * 0.44
         );
         rock.rotation.set(s * 2, s * 3, s * 1.5);
-        rock.scale.setScalar(0.42 + s * 0.45);
+        rock.scale.setScalar(0.55 + s * 0.55);
         rock.castShadow = true;
         rock.receiveShadow = true;
         procBarrier.add(rock);
@@ -749,23 +749,23 @@ if (canvas && shell) {
     if (category === "rocks") {
       const rockModels = ["rocks-a.glb", "rocks-b.glb", "rocks-c.glb"];
       modelName = rockModels[Math.floor(seed * rockModels.length)];
-      scale = 0.5;
-      yOffset = 0.05;
+      scale = 0.68;
+      yOffset = 0.08;
     } else if (category === "sandRocks") {
       const sandRockModels = ["rocks-sand-a.glb", "rocks-sand-b.glb", "rocks-sand-c.glb"];
       modelName = sandRockModels[Math.floor(seed * sandRockModels.length)];
-      scale = 0.5;
-      yOffset = 0.05;
+      scale = 0.68;
+      yOffset = 0.08;
     } else if (category === "cargo") {
       const cargoModels = ["crate-bottles.glb", "crate.glb", "barrel.glb"];
       modelName = cargoModels[Math.floor(seed * cargoModels.length)];
-      scale = 0.58;
-      yOffset = 0.0;
+      scale = 0.65;
+      yOffset = 0.04;
     } else if (category === "ruins") {
       const ruinModels = ["castle-wall.glb", "structure-fence.glb", "structure-fence-sides.glb"];
       modelName = ruinModels[Math.floor(seed * ruinModels.length)];
-      scale = 0.46;
-      yOffset = 0.05;
+      scale = 0.56;
+      yOffset = 0.08;
     }
 
     loadGLB(modelName).then((model) => {

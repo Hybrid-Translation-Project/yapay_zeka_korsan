@@ -1,287 +1,307 @@
 <!doctype html>
 <html lang="tr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Korsan Hazine Avcisi</title>
-    <meta name="description" content="A* algoritması ile korsan hazine avı - Kafatası Adası'nda en güvenli rotayı bul!">
-    <link rel="stylesheet" href="styles.css?v=24">
-  </head>
-  <body>
-    <main class="app-shell">
-      <section class="intro-screen" id="introScreen" aria-labelledby="intro-title">
-        <img class="intro-bg" src="assets/generated/splash-map.png" alt="" aria-hidden="true">
-        <div class="intro-copy">
-          <p class="eyebrow">Karayip Hazine Operasyonu</p>
-          <h1 id="intro-title">Korsan Hazine Avcisi</h1>
-          <p class="story-lead">
-            Karayip Denizi'nin en tehlikeli adasi olan Kafatasi Adasi'nda efsanevi bir hazine sakli.
-            Cesur robot korsanimiz RX-12, kayaliklardan, top mevzilerinden ve batik gemi
-            enkazlarindan gecerek tum hazine sandiklarini toplamali ve korsan kalesine guvenli
-            sekilde ulasmali. En kisa yolu degil, en guvenli ve en dusuk maliyetli rotayi bulmak sart!
-          </p>
 
-          <div class="mission-brief" aria-label="Gorev ozeti">
-            <div class="brief-item">
-              <span>Ada</span>
-              <strong>12 x 12</strong>
-            </div>
-            <div class="brief-item">
-              <span>Algoritma</span>
-              <strong>A*</strong>
-            </div>
-            <div class="brief-item">
-              <span>Gorev</span>
-              <strong>Hazine + Kale</strong>
-            </div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Korsan Hazine Avcisi</title>
+  <meta name="description" content="A* algoritması ile korsan hazine avı - Kafatası Adası'nda en güvenli rotayı bul!">
+  <link rel="stylesheet" href="styles.css?v=24">
+</head>
+
+<body>
+  <main class="app-shell">
+    <section class="intro-screen" id="introScreen" aria-labelledby="intro-title">
+      <img class="intro-bg" src="assets/generated/splash-map.png" alt="" aria-hidden="true">
+      <div class="intro-copy">
+        <p class="eyebrow">Karayip Hazine Operasyonu</p>
+        <h1 id="intro-title">Korsan Hazine Avcisi</h1>
+        <p class="story-lead">
+          Karayip Denizi'nin en tehlikeli adasi olan Kafatasi Adasi'nda efsanevi bir hazine sakli.
+          Cesur robot korsanimiz RX-12, kayaliklardan, top mevzilerinden ve batik gemi
+          enkazlarindan gecerek tum hazine sandiklarini toplamali ve korsan kalesine guvenli
+          sekilde ulasmali. En kisa yolu degil, en guvenli ve en dusuk maliyetli rotayi bulmak sart!
+        </p>
+
+        <div class="mission-brief" aria-label="Gorev ozeti">
+          <div class="brief-item">
+            <span>Ada</span>
+            <strong>12 x 12</strong>
           </div>
-
-          <div class="asset-dock" aria-label="Gorev varliklari">
-            <article class="asset-card">
-              <img src="assets/generated/robot-agent.png" alt="Robot korsan">
-              <div>
-                <span>Kaptan</span>
-                <strong>RX-12 Robot Korsan</strong>
-              </div>
-            </article>
-            <article class="asset-card">
-              <img src="assets/generated/aid-package.png" alt="Hazine sandigi">
-              <div>
-                <span>Ganimet</span>
-                <strong>Hazine Sandigi</strong>
-              </div>
-            </article>
-            <article class="asset-card">
-              <img src="assets/generated/hospital-target.png" alt="Korsan kalesi">
-              <div>
-                <span>Hedef</span>
-                <strong>Korsan Kalesi</strong>
-              </div>
-            </article>
+          <div class="brief-item">
+            <span>Algoritma</span>
+            <strong>A*</strong>
           </div>
-
-          <div class="mission-actions">
-            <button id="startMissionBtn" class="main-menu-action" type="button">
-              <span class="button-icon play-icon" aria-hidden="true"></span>
-              Maceraya Atil
-            </button>
-            <button id="quickPlanBtn" class="secondary-menu-action" type="button">
-              <span class="button-icon route-icon" aria-hidden="true"></span>
-              Hazine Haritasi
-            </button>
+          <div class="brief-item">
+            <span>Gorev</span>
+            <strong>Hazine + Kale</strong>
           </div>
         </div>
 
-        <div class="intro-visual" aria-label="Korsan adasi oyun gorseli">
-          <img src="assets/generated/splash-map.png" alt="Korsan adasi, hazine sandiklari, kale ve engellerden olusan macera haritasi">
-          <div class="signal-strip" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </section>
-
-      <div id="gameView" class="game-view" hidden>
-        <section class="stage" aria-labelledby="project-title">
-          <header class="topbar">
+        <div class="asset-dock" aria-label="Gorev varliklari">
+          <article class="asset-card">
+            <img src="assets/generated/robot-agent.png" alt="Robot korsan">
             <div>
-              <p class="eyebrow">BIL 210 Yapay Zeka Hackathon Prototipi</p>
-              <h1 id="project-title">Korsan Hazine Avcisi</h1>
+              <span>Kaptan</span>
+              <strong>RX-12 Robot Korsan</strong>
             </div>
-            <div class="topbar-actions">
-              <button id="storyBtn" class="ghost-action" type="button">
-                <span class="button-icon story-icon" aria-hidden="true"></span>
-                Efsane
-              </button>
-              <div class="mission-badge" id="missionBadge">Hazir</div>
+          </article>
+          <article class="asset-card">
+            <img src="assets/generated/aid-package.png" alt="Hazine sandigi">
+            <div>
+              <span>Ganimet</span>
+              <strong>Hazine Sandigi</strong>
             </div>
-          </header>
+          </article>
+          <article class="asset-card">
+            <img src="assets/generated/hospital-target.png" alt="Korsan kalesi">
+            <div>
+              <span>Hedef</span>
+              <strong>Korsan Kalesi</strong>
+            </div>
+          </article>
+        </div>
 
-          <div class="workspace">
-            <section class="board-panel" aria-label="Oyun alani">
-              <div class="board-header">
-                <div>
-                  <h2 id="mapTitle">Kafatasi Adasi</h2>
-                  <p id="mapSubtitle">Korsan hazine sandiklarini toplar ve kaleye en dusuk maliyetle ulasir.</p>
-                </div>
-                <div class="map-switcher" role="group" aria-label="Harita secimi">
-                  <button class="chip active" data-map="kafatasi-adasi" type="button">A</button>
-                  <button class="chip" data-map="kayalik-gecit" type="button">B</button>
-                  <button class="chip" data-map="batik-gemi-koyu" type="button">C</button>
-                </div>
+        <div class="mission-actions">
+          <button id="startMissionBtn" class="main-menu-action" type="button">
+            <span class="button-icon play-icon" aria-hidden="true"></span>
+            Maceraya Atil
+          </button>
+          <button id="quickPlanBtn" class="secondary-menu-action" type="button">
+            <span class="button-icon route-icon" aria-hidden="true"></span>
+            Hazine Haritasi
+          </button>
+        </div>
+      </div>
+
+      <div class="intro-visual" aria-label="Korsan adasi oyun gorseli">
+        <img src="assets/generated/splash-map.png"
+          alt="Korsan adasi, hazine sandiklari, kale ve engellerden olusan macera haritasi">
+        <div class="signal-strip" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </section>
+
+    <div id="gameView" class="game-view" hidden>
+      <!-- Game Over Overlay -->
+      <div id="gameOverOverlay" class="game-over-overlay" hidden>
+        <div class="game-over-content">
+          <div class="game-over-skull">☠</div>
+          <h2 class="game-over-title">KAYBETTİNİZ!</h2>
+          <p class="game-over-subtitle">Gemi icin gecerli bir rota bulunamadi.<br>Kayaliklar tum yollari kapatti!</p>
+          <button id="gameOverResetBtn" class="game-over-btn" type="button">
+            <span class="button-icon reset-icon" aria-hidden="true"></span>
+            Tekrar Dene
+          </button>
+        </div>
+      </div>
+      <section class="stage" aria-labelledby="project-title">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">BIL 210 Yapay Zeka Hackathon Prototipi</p>
+            <h1 id="project-title">Korsan Hazine Avcisi</h1>
+          </div>
+          <div class="topbar-actions">
+            <button id="storyBtn" class="ghost-action" type="button">
+              <span class="button-icon story-icon" aria-hidden="true"></span>
+              Efsane
+            </button>
+            <div class="mission-badge" id="missionBadge">Hazir</div>
+          </div>
+        </header>
+
+        <div class="workspace">
+          <section class="board-panel" aria-label="Oyun alani">
+            <div class="board-header">
+              <div>
+                <h2 id="mapTitle">Kafatasi Adasi</h2>
+                <p id="mapSubtitle">Korsan hazine sandiklarini toplar ve kaleye en dusuk maliyetle ulasir.</p>
               </div>
-
-              <div class="scene-shell" id="sceneShell">
-                <canvas id="scene3d" aria-label="3D korsan adasi oyun sahnesi"></canvas>
-                <div class="scene-overlay" aria-hidden="true">
-                  <span class="scene-tag">A* Taktik Goruntu</span>
-                  <span class="scene-tag">3D Korsan Adasi</span>
-                </div>
+              <div class="map-switcher" role="group" aria-label="Harita secimi">
+                <button class="chip active" data-map="kafatasi-adasi" type="button">A</button>
+                <button class="chip" data-map="kayalik-gecit" type="button">B</button>
+                <button class="chip" data-map="batik-gemi-koyu" type="button">C</button>
               </div>
+            </div>
 
-              <details class="map-debug">
-                <summary>2D taktik haritayi goster</summary>
-                <div class="grid-wrap">
-                  <div id="grid" class="grid" aria-label="12 x 12 grid oyun haritasi"></div>
-                </div>
-              </details>
+            <div class="scene-shell" id="sceneShell">
+              <canvas id="scene3d" aria-label="3D korsan adasi oyun sahnesi"></canvas>
+              <div class="scene-overlay" aria-hidden="true">
+                <span class="scene-tag">A* Taktik Goruntu</span>
+                <span class="scene-tag">3D Korsan Adasi</span>
+              </div>
+            </div>
 
-              <div class="legend" aria-label="Harita lejandi">
-                <span><i class="legend-dot start"></i>Demir Yeri</span>
-                <span><i class="legend-dot goal"></i>Kale</span>
-                <span><i class="legend-dot package"></i>Hazine</span>
-                <span><i class="legend-dot wall"></i>Kaya</span>
-                <span><i class="legend-dot enemy"></i>Dusman Gemisi</span>
-                <span><i class="legend-dot risk"></i>Top Mevzisi</span>
-                <span><i class="legend-dot rubble"></i>Batik Gemi</span>
-                <span><i class="legend-dot route"></i>Rota</span>
+            <details class="map-debug">
+              <summary>2D taktik haritayi goster</summary>
+              <div class="grid-wrap">
+                <div id="grid" class="grid" aria-label="12 x 12 grid oyun haritasi"></div>
+              </div>
+            </details>
+
+            <div class="legend" aria-label="Harita lejandi">
+              <span><i class="legend-dot start"></i>Demir Yeri</span>
+              <span><i class="legend-dot goal"></i>Kale</span>
+              <span><i class="legend-dot package"></i>Hazine</span>
+              <span><i class="legend-dot wall"></i>Kaya</span>
+              <span><i class="legend-dot enemy"></i>Dusman Gemisi</span>
+              <span><i class="legend-dot risk"></i>Top Mevzisi</span>
+              <span><i class="legend-dot rubble"></i>Batik Gemi</span>
+              <span><i class="legend-dot route"></i>Rota</span>
+            </div>
+          </section>
+
+          <aside class="control-panel" aria-label="Korsan kontrol paneli">
+            <section class="panel-block">
+              <h2>Kontrol</h2>
+              <div class="button-grid">
+                <button id="solveBtn" class="primary-action" type="button">
+                  <span class="button-icon play-icon" aria-hidden="true"></span>
+                  Rotayi Bul
+                </button>
+                <button id="runBtn" type="button">
+                  <span class="button-icon agent-icon" aria-hidden="true"></span>
+                  Korsani Yolla
+                </button>
+                <button id="stepBtn" type="button">
+                  <span class="button-icon step-icon" aria-hidden="true"></span>
+                  Adim At
+                </button>
+                <button id="resetBtn" type="button">
+                  <span class="button-icon reset-icon" aria-hidden="true"></span>
+                  Sifirla
+                </button>
               </div>
             </section>
 
-            <aside class="control-panel" aria-label="Korsan kontrol paneli">
-              <section class="panel-block">
-                <h2>Kontrol</h2>
-                <div class="button-grid">
-                  <button id="solveBtn" class="primary-action" type="button">
-                    <span class="button-icon play-icon" aria-hidden="true"></span>
-                    Rotayi Bul
-                  </button>
-                  <button id="runBtn" type="button">
-                    <span class="button-icon agent-icon" aria-hidden="true"></span>
-                    Korsani Yolla
-                  </button>
-                  <button id="stepBtn" type="button">
-                    <span class="button-icon step-icon" aria-hidden="true"></span>
-                    Adim At
-                  </button>
-                  <button id="resetBtn" type="button">
-                    <span class="button-icon reset-icon" aria-hidden="true"></span>
-                    Sifirla
-                  </button>
+            <section class="panel-block loadout-panel">
+              <h2>Murettebat</h2>
+              <div class="loadout-grid">
+                <div class="loadout-card">
+                  <img src="assets/generated/robot-agent.png" alt="Robot korsan">
+                  <span>Kaptan</span>
                 </div>
-              </section>
-
-              <section class="panel-block loadout-panel">
-                <h2>Murettebat</h2>
-                <div class="loadout-grid">
-                  <div class="loadout-card">
-                    <img src="assets/generated/robot-agent.png" alt="Robot korsan">
-                    <span>Kaptan</span>
-                  </div>
-                  <div class="loadout-card">
-                    <img src="assets/generated/aid-package.png" alt="Hazine sandigi">
-                    <span>Hazine</span>
-                  </div>
-                  <div class="loadout-card">
-                    <img src="assets/generated/hospital-target.png" alt="Korsan kalesi">
-                    <span>Kale</span>
-                  </div>
+                <div class="loadout-card">
+                  <img src="assets/generated/aid-package.png" alt="Hazine sandigi">
+                  <span>Hazine</span>
                 </div>
-              </section>
-
-              <section class="panel-block">
-                <h2>Ada Haritasi</h2>
-                <div class="brush-row" role="group" aria-label="Hucre tipi">
-                  <label class="brush-option">
-                    <input type="radio" name="brush" value="." checked>
-                    <span class="swatch road"></span>Deniz
-                  </label>
-                  <label class="brush-option">
-                    <input type="radio" name="brush" value="#">
-                    <span class="swatch wall"></span>Kaya
-                  </label>
-                  <label class="brush-option">
-                    <input type="radio" name="brush" value="D">
-                    <span class="swatch enemy"></span>Dusman Gemisi
-                  </label>
-                  <label class="brush-option">
-                    <input type="radio" name="brush" value="R">
-                    <span class="swatch risk"></span>Top Mevzisi
-                  </label>
-                  <label class="brush-option">
-                    <input type="radio" name="brush" value="E">
-                    <span class="swatch rubble"></span>Batik Gemi
-                  </label>
-                  <label class="brush-option">
-                    <input type="radio" name="brush" value="P">
-                    <span class="swatch package"></span>Hazine
-                  </label>
+                <div class="loadout-card">
+                  <img src="assets/generated/hospital-target.png" alt="Korsan kalesi">
+                  <span>Kale</span>
                 </div>
-              </section>
+              </div>
+            </section>
 
-              <section class="panel-block">
-                <h2>Korsan Durumu</h2>
-                <div class="stats">
-                  <div>
-                    <span>Guncel maliyet</span>
-                    <strong id="costValue">0</strong>
-                  </div>
-                  <div>
-                    <span>Adim</span>
-                    <strong id="stepValue">0</strong>
-                  </div>
-                  <div>
-                    <span>Hazine</span>
-                    <strong id="packageValue">0/0</strong>
-                  </div>
-                  <div>
-                    <span>Kesfedilen alan</span>
-                    <strong id="visitedValue">0</strong>
-                  </div>
+            <section class="panel-block">
+              <h2>Ada Haritasi</h2>
+              <div class="brush-row" role="group" aria-label="Hucre tipi">
+                <label class="brush-option">
+                  <input type="radio" name="brush" value="." checked>
+                  <span class="swatch road"></span>Deniz
+                </label>
+                <label class="brush-option">
+                  <input type="radio" name="brush" value="#">
+                  <span class="swatch wall"></span>Kaya
+                </label>
+                <label class="brush-option">
+                  <input type="radio" name="brush" value="D">
+                  <span class="swatch enemy"></span>Dusman Gemisi
+                </label>
+                <label class="brush-option">
+                  <input type="radio" name="brush" value="R">
+                  <span class="swatch risk"></span>Top Mevzisi
+                </label>
+                <label class="brush-option">
+                  <input type="radio" name="brush" value="E">
+                  <span class="swatch rubble"></span>Batik Gemi
+                </label>
+                <label class="brush-option">
+                  <input type="radio" name="brush" value="P">
+                  <span class="swatch package"></span>Hazine
+                </label>
+                <label class="brush-option brush-eraser">
+                  <input type="radio" name="brush" value="eraser">
+                  <span class="swatch eraser-swatch">✕</span>Sil / Kaldir
+                </label>
+              </div>
+            </section>
+
+            <section class="panel-block">
+              <h2>Korsan Durumu</h2>
+              <div class="stats">
+                <div>
+                  <span>Guncel maliyet</span>
+                  <strong id="costValue">0</strong>
                 </div>
-                <p class="status-line" id="statusLine">Ada haritasi hazir. A* rotasi hesaplanabilir.</p>
-              </section>
+                <div>
+                  <span>Adim</span>
+                  <strong id="stepValue">0</strong>
+                </div>
+                <div>
+                  <span>Hazine</span>
+                  <strong id="packageValue">0/0</strong>
+                </div>
+                <div>
+                  <span>Kesfedilen alan</span>
+                  <strong id="visitedValue">0</strong>
+                </div>
+              </div>
+              <p class="status-line" id="statusLine">Ada haritasi hazir. A* rotasi hesaplanabilir.</p>
+            </section>
 
-              <section class="panel-block">
-                <h2>Problem Modeli</h2>
-                <dl class="model-list">
-                  <div>
-                    <dt>Durum</dt>
-                    <dd>(satir, sutun, toplanan hazine maskesi)</dd>
-                  </div>
-                  <div>
-                    <dt>Eylem</dt>
-                    <dd>Yukari, asagi, sol, sag</dd>
-                  </div>
-                  <div>
-                    <dt>Basari</dt>
-                    <dd>Tum hazineleri toplayip kaleye en dusuk maliyetle ulasmak</dd>
-                  </div>
-                  <div>
-                    <dt>Sezgisel</dt>
-                    <dd>Manhattan uzakligi</dd>
-                  </div>
-                </dl>
-              </section>
-            </aside>
-          </div>
-        </section>
+            <section class="panel-block">
+              <h2>Problem Modeli</h2>
+              <dl class="model-list">
+                <div>
+                  <dt>Durum</dt>
+                  <dd>(satir, sutun, toplanan hazine maskesi)</dd>
+                </div>
+                <div>
+                  <dt>Eylem</dt>
+                  <dd>Yukari, asagi, sol, sag</dd>
+                </div>
+                <div>
+                  <dt>Basari</dt>
+                  <dd>Tum hazineleri toplayip kaleye en dusuk maliyetle ulasmak</dd>
+                </div>
+                <div>
+                  <dt>Sezgisel</dt>
+                  <dd>Manhattan uzakligi</dd>
+                </div>
+              </dl>
+            </section>
+          </aside>
+        </div>
+      </section>
 
-        <section class="analysis-panel" aria-label="Algoritma ciktisi">
-          <div>
-            <h2>A* Karar Gunlugu</h2>
-            <ol id="decisionLog" class="decision-log">
-              <li>Rota hesaplaninca ilk kararlar burada gorunur.</li>
-            </ol>
-          </div>
-          <div>
-            <h2>Test Ozeti</h2>
-            <ul class="test-list">
-              <li>Kaya hucresi gecilemez.</li>
-              <li>Dusman gemisi hucresine girince gemi ates acar, dusman batar (maliyet 2).</li>
-              <li>Top mevzisi ve batik gemi hucresi daha yuksek maliyetlidir.</li>
-              <li>Kaleye ulasmak icin tum hazineler toplanir.</li>
-              <li>Rota yoksa korsan hareket etmez.</li>
-            </ul>
-          </div>
-        </section>
-      </div>
-    </main>
+      <section class="analysis-panel" aria-label="Algoritma ciktisi">
+        <div>
+          <h2>A* Karar Gunlugu</h2>
+          <ol id="decisionLog" class="decision-log">
+            <li>Rota hesaplaninca ilk kararlar burada gorunur.</li>
+          </ol>
+        </div>
+        <div>
+          <h2>Test Ozeti</h2>
+          <ul class="test-list">
+            <li>Kaya hucresi gecilemez.</li>
+            <li>Dusman gemisi hucresine girince gemi ates acar, dusman batar (maliyet 2).</li>
+            <li>Top mevzisi ve batik gemi hucresi daha yuksek maliyetlidir.</li>
+            <li>Kaleye ulasmak icin tum hazineler toplanir.</li>
+            <li>Rota yoksa korsan hareket etmez.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </main>
 
-    <script type="application/json" id="gameStateData">{}</script>
-    <script src="app.js?v=24"></script>
-    <script type="module" src="game3d.js?v=24"></script>
-  </body>
+  <script type="application/json" id="gameStateData">{}</script>
+  <script src="app.js?v=24"></script>
+  <script type="module" src="game3d.js?v=24"></script>
+</body>
+
 </html>

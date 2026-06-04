@@ -289,7 +289,9 @@
       stepBtn: documentRef.getElementById("stepBtn"),
       resetBtn: documentRef.getElementById("resetBtn"),
       mapButtons: Array.from(documentRef.querySelectorAll("[data-map]")),
-      brushInputs: Array.from(documentRef.querySelectorAll("input[name='brush']"))
+      brushInputs: Array.from(documentRef.querySelectorAll("input[name='brush']")),
+      gameOverOverlay: documentRef.getElementById("gameOverOverlay"),
+      gameOverResetBtn: documentRef.getElementById("gameOverResetBtn")
     };
 
     const state = {
@@ -322,7 +324,8 @@
 
     function selectedBrush() {
       const selected = elements.brushInputs.find((input) => input.checked);
-      return selected ? selected.value : ".";
+      if (!selected) return ".";
+      return selected.value === "eraser" ? "." : selected.value;
     }
 
     function stopTimer() {
@@ -388,6 +391,7 @@
       state.grid[r][c] = brush;
       state.result = null;
       state.pathIndex = 0;
+      if (elements.gameOverOverlay) elements.gameOverOverlay.hidden = true;
       setBadge("Duzenlendi");
       elements.statusLine.textContent = "Ada haritasi degisti. Rota yeniden hesaplanmali.";
       render();
@@ -485,11 +489,15 @@
       try {
         state.result = findRescuePath(state.grid);
         if (state.result.success) {
+          if (elements.gameOverOverlay) elements.gameOverOverlay.hidden = true;
           setBadge("Rota bulundu", "done");
           elements.statusLine.textContent = `A* ${state.result.steps} adimlik rotayi ${state.result.cost} maliyetle buldu.`;
         } else {
           setBadge("Rota yok", "alert");
           elements.statusLine.textContent = "Bu adada tum hazineleri toplayip kaleye ulasan rota bulunamadi.";
+          if (elements.gameOverOverlay) {
+            elements.gameOverOverlay.hidden = false;
+          }
         }
       } catch (error) {
         state.result = null;
@@ -526,6 +534,7 @@
       state.grid = cloneRows(selected.rows);
       state.result = null;
       state.pathIndex = 0;
+      if (elements.gameOverOverlay) elements.gameOverOverlay.hidden = true;
       setBadge("Hazir");
       elements.statusLine.textContent = "Ada haritasi hazir. A* rotasi hesaplanabilir.";
       elements.mapButtons.forEach((button) => {
@@ -552,6 +561,9 @@
     }
     if (elements.storyBtn) {
       elements.storyBtn.addEventListener("click", openStory);
+    }
+    if (elements.gameOverResetBtn) {
+      elements.gameOverResetBtn.addEventListener("click", () => resetMap(state.preset.id));
     }
 
     root.AkilliKurtarmaApp = {
