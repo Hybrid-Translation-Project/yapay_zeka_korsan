@@ -106,10 +106,17 @@ if (canvas && shell) {
     plank: new THREE.BoxGeometry(0.4, 0.04, 0.12)
   };
 
+  /* Deniz dokusu (docs/deniz.png) - zemin karolari ve taban icin */
+  const seaTexture = new THREE.TextureLoader().load("docs/deniz.png");
+  seaTexture.wrapS = THREE.RepeatWrapping;
+  seaTexture.wrapT = THREE.RepeatWrapping;
+  seaTexture.colorSpace = THREE.SRGBColorSpace;
+
   /* ── Pirate Materials ── */
   const materials = {
     sand: new THREE.MeshStandardMaterial({ color: 0x1f5f82, roughness: 0.34, metalness: 0.25 }),
     sandAlt: new THREE.MeshStandardMaterial({ color: 0x247594, roughness: 0.3, metalness: 0.28 }),
+    seaTile: new THREE.MeshStandardMaterial({ map: seaTexture, color: 0xeaf4fb, roughness: 0.5, metalness: 0.12 }),
     wallTile: new THREE.MeshStandardMaterial({ color: 0x2a2620, roughness: 0.96 }),
     riskTile: new THREE.MeshStandardMaterial({ color: 0x3a1515, roughness: 0.9, emissive: 0x380808, emissiveIntensity: 0.38 }),
     rubbleTile: new THREE.MeshStandardMaterial({ color: 0x163d52, roughness: 0.4, metalness: 0.22 }),
@@ -234,12 +241,31 @@ if (canvas && shell) {
   let latestDetail = null;
   let packageIndexByCell = new Map();
   let agent = null;
+  let waterSurface = null;
+  let waterBase = null;
 
   const pointer = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
 
   agent = createAgent();
   effectRoot.add(agent);
+
+  /* Paylasilan top gullesi (dusman gemiye ates edince ucar) */
+  const cannonball = new THREE.Mesh(geometries.cannonBall, materials.metal);
+  cannonball.scale.setScalar(1.3);
+  cannonball.castShadow = true;
+  cannonball.visible = false;
+  cannonball.userData.active = false;
+  effectRoot.add(cannonball);
+
+  function sinkEnemy(cellKey, seconds) {
+    const enemy = enemyShips.get(cellKey);
+    if (enemy && !enemy.userData.sunk) {
+      enemy.userData.sunk = true;
+      enemy.userData.sinkStart = seconds;
+      if (enemy.userData.fireGroup) enemy.userData.fireGroup.visible = true;
+    }
+  }
 
   function disposeObject(root) {
     while (root.children.length) {
@@ -272,7 +298,7 @@ if (canvas && shell) {
     if (tile === "R") return materials.riskTile;
     if (tile === "E") return materials.rubbleTile;
     if (tile === "D") return materials.enemyTile;
-    return (r + c) % 2 === 0 ? materials.sand : materials.sandAlt;
+    return materials.seaTile;
   }
 
   /* ── Agent (Robot Pirate) ── */
@@ -349,11 +375,11 @@ if (canvas && shell) {
     group.add(bodyGroup);
     group.scale.setScalar(1.55);
 
-    /* Muzzle flash (top tetiklenince gosterilir) */
+    /* Muzzle flash (top tetiklenince gosterilir) - pruvada, gidis (dusman) yonune bakar */
     const muzzle = new THREE.Mesh(geometries.flame, materials.fireCore);
     muzzle.scale.setScalar(0.6);
-    muzzle.position.set(0.34, 0.42, 0.18);
-    muzzle.rotation.z = -Math.PI / 2;
+    muzzle.position.set(0, 0.42, 0.5);
+    muzzle.rotation.x = Math.PI / 2;
     muzzle.visible = false;
     group.add(muzzle);
     group.userData.muzzle = muzzle;
@@ -1064,17 +1090,20 @@ if (canvas && shell) {
     const rows = gridRows.length;
     const cols = gridRows[0].length;
 
-    /* Ocean base */
+    /* Cevre kumsali (geminin gezmedigi alan) - acik kum tonu */
     const oceanGeo = new THREE.BoxGeometry(cols * CELL + 3, 0.34, rows * CELL + 3);
-    const ocean = new THREE.Mesh(oceanGeo, materials.water);
+    const ocean = new THREE.Mesh(
+      oceanGeo,
+      new THREE.MeshStandardMaterial({ color: 0xcbb083, roughness: 0.95, metalness: 0.02 })
+    );
     ocean.position.y = -0.28;
     ocean.receiveShadow = true;
     terrainRoot.add(ocean);
 
-    /* Island base (deniz) */
+    /* Island base -> karolarin etrafindaki acik kum rim */
     const base = new THREE.Mesh(
       new THREE.BoxGeometry(cols * CELL + 1.05, 0.34, rows * CELL + 1.05),
-      new THREE.MeshStandardMaterial({ color: 0x113c54, roughness: 0.4, metalness: 0.2 })
+      new THREE.MeshStandardMaterial({ color: 0xe3cb97, roughness: 0.94, metalness: 0.02 })
     );
     base.position.y = -0.22;
     base.receiveShadow = true;
@@ -1082,7 +1111,7 @@ if (canvas && shell) {
 
     const edge = new THREE.Mesh(
       new THREE.BoxGeometry(cols * CELL + 1.22, 0.32, rows * CELL + 1.22),
-      new THREE.MeshStandardMaterial({ color: 0x1a3a5a, roughness: 0.84 })
+      new THREE.MeshStandardMaterial({ color: 0xb89a62, roughness: 0.9, metalness: 0.02 })
     );
     edge.position.y = -0.44;
     edge.receiveShadow = true;
@@ -1148,11 +1177,31 @@ if (canvas && shell) {
       }
     }
 
+    /* Hareketli deniz yuzeyi (karolarin uzerinde dalgalanan yari saydam su) */
+    const waterGeo = new THREE.PlaneGeometry(cols * CELL, rows * CELL, cols * 2, rows * 2);
+    waterGeo.rotateX(-Math.PI / 2);
+    const water = new THREE.Mesh(
+      waterGeo,
+      new THREE.MeshStandardMaterial({
+        color: 0x2f8fc4,
+        transparent: true,
+        opacity: 0.55,
+        roughness: 0.2,
+        metalness: 0.45,
+        flatShading: true
+      })
+    );
+    water.position.set(0, 0.09, 0);
+    water.renderOrder = 2;
+    terrainRoot.add(water);
+    waterSurface = water;
+    waterBase = Float32Array.from(waterGeo.attributes.position.array);
+
     /* Grid overlay */
     const gridHelper = new THREE.GridHelper(cols * CELL, cols, 0x8a7a5a, 0x5a4a3a);
     gridHelper.position.y = 0.075;
     gridHelper.material.transparent = true;
-    gridHelper.material.opacity = 0.5;
+    gridHelper.material.opacity = 0.28;
     terrainRoot.add(gridHelper);
 
     /* Load off-board decorative GLB models asynchronously */
@@ -1277,26 +1326,54 @@ if (canvas && shell) {
       pack.visible = (mask & bit) === 0;
     }
 
-    /* Dusman gemilerini rota ilerledikce batir (D karolari) */
+    /* Dusman gemileri: bir adim once ates, gulle varinca batar (D karolari) */
     if (enemyShips.size > 0) {
+      const now = performance.now() / 1000;
+
       if (detail.pathIndex === 0) {
         enemyShips.forEach((enemy) => {
           enemy.userData.sunk = false;
           enemy.userData.sinkStart = undefined;
+          enemy.userData.targeted = false;
           if (enemy.userData.fireGroup) enemy.userData.fireGroup.visible = false;
         });
+        cannonball.userData.active = false;
+        cannonball.visible = false;
       }
+
+      /* Gecilmis dusmanlari (rota ortasindan yuklenme vb.) animasyonsuz batir */
       for (let i = 0; i <= Math.min(detail.pathIndex, path.length - 1); i += 1) {
         const pnode = path[i];
         if (!pnode || pnode.tile !== "D") continue;
         const enemy = enemyShips.get(`${pnode.r},${pnode.c}`);
-        if (enemy && !enemy.userData.sunk) {
+        if (enemy && !enemy.userData.sunk && !enemy.userData.targeted) {
           enemy.userData.sunk = true;
-          enemy.userData.sinkStart = performance.now() / 1000;
+          enemy.userData.sinkStart = now;
           if (enemy.userData.fireGroup) enemy.userData.fireGroup.visible = true;
-          if (i === detail.pathIndex) {
-            agent.userData.firing = performance.now() / 1000;
+        }
+      }
+
+      /* Bir adim once: bir sonraki karo dusman gemisi ise simdi ates et */
+      const nextNode = path[detail.pathIndex + 1];
+      if (nextNode && nextNode.tile === "D") {
+        const cellKey = `${nextNode.r},${nextNode.c}`;
+        const enemy = enemyShips.get(cellKey);
+        if (enemy && !enemy.userData.targeted && !enemy.userData.sunk) {
+          enemy.userData.targeted = true;
+          agent.userData.firing = now;
+
+          /* Onceki gulle hala ucuyorsa onceki hedefi hemen batir (tek gulle paylasimi) */
+          if (cannonball.userData.active && cannonball.userData.enemyCell) {
+            sinkEnemy(cannonball.userData.enemyCell, now);
           }
+
+          const from = agentWorldPosition(path[detail.pathIndex]);
+          from.y += 0.32;
+          const to = enemy.position.clone();
+          to.y += 0.4;
+          cannonball.userData = { active: true, from, to, startTime: now, duration: 0.4, enemyCell: cellKey };
+          cannonball.position.copy(from);
+          cannonball.visible = true;
         }
       }
     }
@@ -1538,6 +1615,33 @@ if (canvas && shell) {
         child.userData.ring.rotation.z = -seconds * 1.2;
       }
     });
+
+    /* Hareketli deniz dalgalari */
+    if (waterSurface && waterBase) {
+      const pos = waterSurface.geometry.attributes.position;
+      const arr = pos.array;
+      for (let i = 0; i < arr.length; i += 3) {
+        const bx = waterBase[i];
+        const bz = waterBase[i + 2];
+        arr[i + 1] = Math.sin(bx * 1.6 + seconds * 1.7) * 0.06
+                   + Math.sin(bz * 2.2 + seconds * 1.15) * 0.045;
+      }
+      pos.needsUpdate = true;
+      waterSurface.geometry.computeVertexNormals();
+    }
+
+    /* Top gullesi ucusu -> inince hedef dusmani batir */
+    if (cannonball.userData.active) {
+      const u = cannonball.userData;
+      const t = Math.min(1, (seconds - u.startTime) / u.duration);
+      cannonball.position.lerpVectors(u.from, u.to, t);
+      cannonball.position.y += Math.sin(t * Math.PI) * 0.45;
+      if (t >= 1) {
+        cannonball.visible = false;
+        u.active = false;
+        sinkEnemy(u.enemyCell, seconds);
+      }
+    }
 
     /* Dusman gemisi batma + alev animasyonu */
     enemyShips.forEach((enemy) => {
