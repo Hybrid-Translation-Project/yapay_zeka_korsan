@@ -325,7 +325,7 @@
     function selectedBrush() {
       const selected = elements.brushInputs.find((input) => input.checked);
       if (!selected) return ".";
-      return selected.value === "eraser" ? "." : selected.value;
+      return selected.value;
     }
 
     function stopTimer() {
