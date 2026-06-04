@@ -1,0 +1,29 @@
+# OS/editor clutter
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# Logs and local runtime files
+*.log
+*.tmp
+*.temp
+.env
+.env.*
+
+# Dependency/build caches
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+
+# Local agent scratch files
+brain/
+
+# Source asset archives already unpacked into assets/
+*.zip
+*.rar
+*.7z
+
